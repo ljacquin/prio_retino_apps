@@ -1,0 +1,135 @@
+{
+	"languages": ["English", "Français", "Português"],
+	"translation": [
+	  	{
+			"English": "Loading Prio Retino...",
+			"Français": "Chargement de l'application Prio Retino...",
+			"Português": "Carregando a aplicação Prio Retino..."
+		},
+		{
+			"English": "left eye",
+			"Français": "oeil gauche",
+			"Português": "olho esquerdo"
+		},
+		{
+			"English": "right eye",
+			"Français": "oeil droit",
+			"Português": "olho direito"
+		},
+		{
+			"English": "Warning: low quality image detected, Prio Retino results might be unreliable. ",
+			"Français": "Attention: image de faible qualité détectée, les résultats de Prio Retino peuvent ne pas être fiables. ",
+			"Português": "Aviso: imagem de baixa qualidade detectada, os resultados Prio Retino podem não ser confiáveis. "
+		},
+		{
+			"English": "Do not refresh the page, press 'Reset' to clean up before each new analysis",
+			"Français": "Ne pas rafraichir la page, appuyer sur 'Réinitialiser' pour nettoyer avant chaque nouvelle analyse",
+			"Português": "Não atualize a página, clique em 'Reinicialização' para iniciar uma nova análise"
+		},
+		{
+			"English": "Reset",
+			"Français": "Réinitialiser",
+			"Português": "Reinicialização"
+		},
+		{
+			"English": "Insert patient identifier",
+			"Français": "Insérer l'identifiant du patient",
+			"Português": "Inserir identificador do paciente"
+		},
+		{
+			"English": "Insert 'left eye' or 'right eye'",
+			"Français": "Insérer 'oeil gauche' ou 'oeil droit'",
+			"Português": "Inserir 'olho esquerdo' ou 'olho direito'"
+		},
+		{
+			"English": "Upload retinal fundus image",
+			"Français": "Charger l'image du fond d'oeil",
+			"Português": "Carregar a imagem do fundo do olho"
+		},
+		{
+			"English": "Print Prio Retino results to PDF",
+			"Français": "Imprimer ou sauvegarder les résultats de Prio Retino au format PDF",
+			"Português": "Imprimir ou salvar os resultados Prio Retino em PDF"
+		},
+		{
+			"English": "Remarks and definitions:",
+			"Français": "Remarque et définitions:",
+			"Português": "Notas e definições:"
+		},
+		{
+			"English": "- Prio Retino results are given on an idicative basis, the diagnosis should be established by an ophthalmologist",
+			"Français": "- Les résultats de Prio Retino sont donnés à titre indicatif, le diagnostic doit être établi par un ophtalmologue",
+			"Português": "- Os resultados da Prio Retino são apenas para orientação, o diagnóstico deve ser feito por um oftalmologista"
+		},
+		{
+			"English": "- ICDR: International Clinical Diabetic Retinopathy severity scale; AAO: American Academy of Ophthalmology",
+			"Français": "- EIRD: Echelle Internationale de sévérité de la Rétinopathie Diabétique; AAO: Académie Américaine d'Ophtalmologie",
+			"Português": "- EIRD: Escala Internacional de Retinopatia diabética; AAO: Academia Americana de Oftalmologia"
+		},
+		{
+			"English": "- Non referable diabetic retinopathy (DR): mild or no visible signs of DR according to ICDR. AAO recommendations: repeat retinal examination annually for non referable DR",
+			"Français": "- Rétinopathie diabétique (RD) non référable: léger ou aucun signe visible de la RD selon l'EIRD. Recommandations de l'AAO: répéter l'examen annuellement pour la RD non référable",
+			"Português": "- Retinopatia diabética não-refratária (RD): sinais leves ou não visíveis de RD de acordo com a EIRD. Recomendações da AAO: repetir anualmente para DR não-referenciáveis"
+		},
+		{
+			"English": "- Referable diabetic retinopathy (DR): moderate or superior signs of DR according to ICDR. AAO recommendations: repeat retinal examination within 6 or 3 months for moderate or superior signs of DR respectively",
+			"Français": "- Rétinopathie diabétique (RD) référable: signes modérés ou supérieurs de la RD selon l'EIRD. Recommandations de l'AAO: répéter l'examen respectivement tous les 6 ou 3 mois pour des signes modérés ou supérieurs de RD",
+			"Português": "- Retinopatia diabética (RD) referenciável : sinais moderados ou maiores de RD, de acordo com a EIRD. Recomendações da AAO: repetir o examea cada 6 ou 3 meses, respectivamente, para sinais moderados ou maiores de RD "
+		},
+		{
+			"English": "- The analyzed data is deleted and not stored by Prio Retino after each reset",
+			"Français": "- Les données analysées sont supprimées et ne sont pas stockées par Prio Retino après chaque réinitialisation",
+			"Português": "- Os dados analisados são excluídos e não armazenados pelo Prio Retino após cada redefinição"
+		},
+		{
+			"English": "Gaiha is a trademark of KerIA",
+			"Français": "Gaiha est une marque de KerIA",
+			"Português": "Gaiha é uma marca da KerIA"
+		},
+		{
+			"English": "Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of ",
+			"Français": "Résultats de Prio Retino : léger ou aucun signe visible de rétinopathie diabétique (i.e. RD non référable) détecté avec une probabilité de ",
+			"Português": "Resultados Prio Retino : leves ou nenhum sinal visível de retinopatia diabética (ou seja, RD não referenciável) detectado com uma probabilidade de "
+		},
+		{
+			"English": " for ",
+			"Français": " pour ",
+			"Português": " para "
+		},
+		{
+			"English": "Prio Retino results : referable diabetic retinopathy detected with a probability of ",
+			"Français": "Résultats de Prio Retino : rétinopathie diabétique référable détectée avec une probabilité de ",
+			"Português": "Resultados Prio Retino : Retinopatia diabética refratária detectada com uma probabilidade de "
+		},
+		{
+			"English": "Warning: possible presence of maculopathy detected with a probability of ",
+			"Français": "Attention: présence possible de maculopathie détectée avec une probabilité de ",
+			"Português": "Aviso Importante: possível presença de maculopatia detectada com uma probabilidade de "
+		},
+		{
+			"English": "potential signs of moderate DR detected with a probability of ",
+			"Français": "signes potentiels de RD modérée détectés avec une probabilité de ",
+			"Português": "sinais potenciais de RD moderados detectados com uma probabilidade de "
+		},
+		{
+			"English": "potential signs of severe or superior DR detected with a probability of ",
+			"Français": "signes potentiels de RD sévère ou supérieure détectés avec une probabilité de ",
+			"Português": "sinais potenciais de RD grave ou superior detectados com uma probabilidade de "
+		},
+    		{
+  			"English": " Disease severity:  ",
+  			"Français": " Stade de la maladie:  ",
+			"Português": " Estágio da doença:  "
+    		},
+	  	{
+			"English": "Set Prio Retino language",
+    			"Français": "Définir la langue de Prio Retino",
+      			"Português": "Definir idioma Prio Retino"
+  		},
+	  	{
+			"English": "Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 'left eye' or 'right eye' (without quotes), and 3. Upload a fundus image.  Do not change the selected language or patient references during an analysis, you might be charged further otherwise.",
+    			"Français": "Veuillez d'abord réinitialiser Prio Retino, puis suivez ces instructions: 1. Sélectionnez votre langue, 2. Insérez l'identifiant du patient et 'oeil gauche' ou 'oeil droit' (sans les guillemets), et 3. Chargez une image du fond d'oeil. Ne changez pas la langue sélectionnée ou les références du patient pendant une analyse, sinon vous pourriez être facturé davantage.",
+      			"Português": "Reinicie o Prio Retino primeiro e depois siga estas instruções: 1. Selecione seu idioma, 2. Insira o identificador do paciente e 'olho esquerdo' ou 'olho direito' (sem aspas) e 3. Carregue uma imagem do fundo de olho. Não altere o idioma selecionado ou as referências do paciente durante uma análise, caso contrário, você poderá ser cobrado."
+  		}
+	]
+}
