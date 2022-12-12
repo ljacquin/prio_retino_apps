@@ -199,7 +199,6 @@ ui <- secure_app(
             titlePanel(h5(p(""), align = "left")),
             #
             textInput("patient_id", i18n$t("Insert patient identifier"), value = ""),
-            textInput("eye_side", i18n$t("Insert 'left eye' or 'right eye'"), value = ""),
             fileInput(
               input = "file1",
               label = i18n$t("Upload retinal fundus image"),
@@ -292,16 +291,13 @@ server <- shinyServer(
     rv <- reactiveValues(
       file1 = NULL,
       patient_id = NULL,
-      eye_side = NULL
     )
 
     observeEvent(input$reset, {
       rv$file1 <- NULL
       rv$patient_id <- NULL
-      rv$eye_side <- NULL
       reset("file1")
       reset("patient_id")
-      reset("eye_side")
     })
 
     observeEvent(input$file1, {
@@ -310,10 +306,6 @@ server <- shinyServer(
 
     observeEvent(input$patient_id, {
       rv$patient_id <- input$patient_id
-    })
-
-    observeEvent(input$eye_side, {
-      rv$eye_side <- input$eye_side
     })
 
     observeEvent(input$print, {
@@ -331,10 +323,7 @@ server <- shinyServer(
       )
 
       if (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) {
-        if ((!is.null(unlist(rv$patient_id))) && (!is.null(unlist(rv$eye_side))) &&
-          (unlist(rv$patient_id) != "") && ((str_trim(tolower(gsub("'", "", unlist(rv$eye_side))), side = "both") == i18n$t("left eye")) ||
-          (str_trim(tolower(gsub("'", "", unlist(rv$eye_side))), side = "both") == i18n$t("right eye")))
-        ) {
+        if ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != "")) {
           # Update login usage
           auth_ind <- as.character(reactiveValuesToList(result_auth))
           tryCatch(
@@ -386,17 +375,10 @@ server <- shinyServer(
           ifelse((proba_disease_status <= 0.5), pred_disease_status <- 1, pred_disease_status <- 2)
 
           if (pred_disease_status == 1) {
-            if (is.null(unlist(rv$eye_side))) {
-              disease_diagnostic <- paste0(
-                i18n$t("Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of "),
-                (1 - trunc(100 * proba_disease_status) / 100), i18n$t(" for "), rv$patient_id, "."
-              )
-            } else {
-              disease_diagnostic <- paste0(
-                i18n$t("Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of "),
-                (1 - trunc(100 * proba_disease_status) / 100), i18n$t(" for "), rv$patient_id, " [", input$eye_side, "]."
-              )
-            }
+            disease_diagnostic <- paste0(
+              i18n$t("Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of "),
+              (1 - trunc(100 * proba_disease_status) / 100), i18n$t(" for "), rv$patient_id, "."
+            )
             background_color <- "#00FF00"
             proba_maculo <- 1 - as.numeric(cnn_binary_classifier_3 %>% predict(x_target))
             ifelse((proba_maculo <= 0.5), Maculo_status <- 0, Maculo_status <- 1)
@@ -414,48 +396,25 @@ server <- shinyServer(
             proba_maculo <- 1 - as.numeric(cnn_binary_classifier_4 %>% predict(x_target))
             ifelse((proba_maculo <= 0.5), Maculo_status <- 0, Maculo_status <- 1)
 
-            if (is.null(unlist(rv$eye_side))) {
-              ifelse((pred_disease_level == 1),
-                disease_level <- paste0(
-                  i18n$t("potential signs of moderate DR detected with a probability of "),
-                  (1 - trunc(100 * proba_disease_level) / 100)
-                ),
-                disease_level <- paste0(
-                  i18n$t("potential signs of severe or superior DR detected with a probability of "),
-                  (trunc(100 * proba_disease_level) / 100)
-                )
+            ifelse((pred_disease_level == 1),
+              disease_level <- paste0(
+                i18n$t("potential signs of moderate DR detected with a probability of "),
+                (1 - trunc(100 * proba_disease_level) / 100)
+              ),
+              disease_level <- paste0(
+                i18n$t("potential signs of severe or superior DR detected with a probability of "),
+                (trunc(100 * proba_disease_level) / 100)
               )
+            )
+            disease_diagnostic <- paste0(
+              i18n$t("Prio Retino results : referable diabetic retinopathy detected with a probability of "), (trunc(100 * proba_disease_status) / 100),
+              i18n$t(" for "), rv$patient_id, ".", i18n$t(" Disease severity:  "), disease_level, ". "
+            )
+            if (Maculo_status) {
               disease_diagnostic <- paste0(
-                i18n$t("Prio Retino results : referable diabetic retinopathy detected with a probability of "), (trunc(100 * proba_disease_status) / 100),
-                i18n$t(" for "), rv$patient_id, ".", i18n$t(" Disease severity:  "), disease_level, ". "
+                disease_diagnostic, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
+                (trunc(100 * proba_maculo) / 100)
               )
-              if (Maculo_status) {
-                disease_diagnostic <- paste0(
-                  disease_diagnostic, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
-                  (trunc(100 * proba_maculo) / 100)
-                )
-              }
-            } else {
-              ifelse((pred_disease_level == 1),
-                disease_level <- paste0(
-                  i18n$t("potential signs of moderate DR detected with a probability of "),
-                  (1 - trunc(100 * proba_disease_level) / 100)
-                ),
-                disease_level <- paste0(
-                  i18n$t("potential signs of severe or superior DR detected with a probability of "),
-                  (trunc(100 * proba_disease_level) / 100)
-                )
-              )
-              disease_diagnostic <- paste0(
-                i18n$t("Prio Retino results : referable diabetic retinopathy detected with a probability of "), (trunc(100 * proba_disease_status) / 100),
-                i18n$t(" for "), rv$patient_id, " [", input$eye_side, "].", i18n$t(" Disease severity:  "), disease_level, ". "
-              )
-              if (Maculo_status) {
-                disease_diagnostic <- paste0(
-                  disease_diagnostic, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
-                  (trunc(100 * proba_maculo) / 100)
-                )
-              }
             }
             background_color <- c("#FF5050", "#FF5050")[pred_disease_level]
 
@@ -488,7 +447,7 @@ server <- shinyServer(
           }
           out_prio_retino_txt <- HTML(paste0("<div style='background-color:", background_color, "'>", disease_diagnostic, "</div>"))
         } else {
-          out_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 'left eye' or 'right eye' (without quotes), and 3. Upload a fundus image.  Do not change the selected language or patient references during an analysis, you might be charged further otherwise."), "</font>"))
+          out_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image.  Do not change the selected language or patient references during an analysis, you might be charged further otherwise."), "</font>"))
         }
         list_out_prio_retino$out_prio_retino_txt <- out_prio_retino_txt
       } else {
@@ -511,9 +470,7 @@ server <- shinyServer(
     output$outputImage1 <- renderImage(
       {
         test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
-          (!is.null(unlist(rv$patient_id))) && (!is.null(unlist(rv$eye_side))) &&
-          (unlist(rv$patient_id) != "") && ((str_trim(tolower(gsub("'", "", unlist(rv$eye_side))), side = "both") == i18n$t("left eye")) ||
-          (str_trim(tolower(gsub("'", "", unlist(rv$eye_side))), side = "both") == i18n$t("right eye")))
+          ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
 
         if (!test_render_img) {
           # Default image
@@ -537,9 +494,7 @@ server <- shinyServer(
     output$outputImage2 <- renderImage(
       {
         test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
-          (!is.null(unlist(rv$patient_id))) && (!is.null(unlist(rv$eye_side))) &&
-          (unlist(rv$patient_id) != "") && ((str_trim(tolower(gsub("'", "", unlist(rv$eye_side))), side = "both") == i18n$t("left eye")) ||
-          (str_trim(tolower(gsub("'", "", unlist(rv$eye_side))), side = "both") == i18n$t("right eye")))
+          ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
 
         if (!test_render_img) {
           list(
