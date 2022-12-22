@@ -147,7 +147,7 @@ appCSS <- "
 ################################
 ui <- secure_app(
   choose_language = FALSE,
-  tag_img = tags$img(src = "Gaiha_prio_retino_login.png", width = 300),
+  tags_top = tags$img(src = "Gaiha_prio_retino_login.png", width = 300),
 
   # ui <- fluidPage(
   fluidPage(
@@ -271,28 +271,25 @@ ui <- secure_app(
 ########################
 server <- shinyServer(
   function(input, output, session) {
-    options(shiny.maxRequestSize = 750000)
+    options(shiny.maxRequestSize = 4 * 1024^2)
 
-    observeEvent(input$selected_language, {
-      # Here is where we update language in session
-      shiny.i18n::update_lang(session, input$selected_language)
-    })
-
+    # check credentials
     result_auth <- secure_server(check_credentials = check_credentials(credentials))
-
     output$res_auth <- renderPrint({
       reactiveValuesToList(result_auth)
     })
 
-    # Hide the loading message when the reset of the server function has executed
+    # hide the loading message when the reset of the server function has executed
     hide(id = "loading-content", anim = TRUE, animType = "fade", time = 4)
     show("app-content")
 
+    # create reactive values for input file and patient id
     rv <- reactiveValues(
       file1 = NULL,
       patient_id = NULL,
     )
 
+    # reset input file and patient id
     observeEvent(input$reset, {
       rv$file1 <- NULL
       rv$patient_id <- NULL
@@ -300,20 +297,42 @@ server <- shinyServer(
       reset("patient_id")
     })
 
-    observeEvent(input$file1, {
-      rv$file1 <- input$file1
-    })
-
+    # set patient id during non analysis state only
     observeEvent(input$patient_id, {
-      rv$patient_id <- input$patient_id
+      non_analysis_state <- (list_out_prio_retino()$out_prio_retino_txt == "")
+      if (non_analysis_state
+      ) {
+        rv$patient_id <- input$patient_id
+      }
     })
 
+    # set input file during non analysis state only
+    observeEvent(input$file1, {
+      non_analysis_state <- (list_out_prio_retino()$out_prio_retino_txt == "")
+      if (non_analysis_state
+      ) {
+        rv$file1 <- input$file1
+      }
+    })
+
+    # set language during non analysis state only
+    observeEvent(input$selected_language, {
+      non_analysis_state <- (list_out_prio_retino()$out_prio_retino_txt == "")
+      if (non_analysis_state
+      ) {
+        # Here is where we update language in session
+        shiny.i18n::update_lang(session, input$selected_language)
+      }
+    })
+
+    # print
     observeEvent(input$print, {
       js$winprint()
     })
 
+    # make prio computations and return results as a list
     list_out_prio_retino <- reactive({
-      # initialize an empty list for prio retino outputs
+      # initialize an empty list for prio retino results
       list_out_prio_retino <- list(
         resized_cropped_target_image = NULL,
         transformed_target_image = NULL,
@@ -347,8 +366,8 @@ server <- shinyServer(
           fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
 
           # resize and crop image transformed_target_image
-          # resize_image(name = 'www/915_left.jpg', desired_size = desired_size)
-          resize_image(name = input$file1$datapath, desired_size = desired_size)
+          # resize_image(name = '', desired_size = desired_size)
+          resize_image(name = rv$file1$datapath, desired_size = desired_size)
           list_out_prio_retino$resized_cropped_target_image <- image_read("www/resized_cropped_target_image.jpg")
 
           # transform target image
@@ -447,7 +466,7 @@ server <- shinyServer(
           }
           out_prio_retino_txt <- HTML(paste0("<div style='background-color:", background_color, "'>", disease_diagnostic, "</div>"))
         } else {
-          out_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image.  Do not change the selected language or patient references during an analysis, you might be charged further otherwise."), "</font>"))
+          out_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image."), "</font>"))
         }
         list_out_prio_retino$out_prio_retino_txt <- out_prio_retino_txt
       } else {
@@ -462,6 +481,7 @@ server <- shinyServer(
       list_out_prio_retino
     })
 
+    # return human readable results as text
     output$outputText <- renderText({
       list_out_prio_retino()$out_prio_retino_txt
     })
