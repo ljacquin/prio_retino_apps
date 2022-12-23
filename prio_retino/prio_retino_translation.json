@@ -89,7 +89,7 @@
 		{
 			"English": "Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of ",
 			"Français": "Résultats de Prio Retino : léger ou aucun signe visible de rétinopathie diabétique (i.e. RD non référable) détecté avec une probabilité de ",
-			"Português": "Resultados Prio Retino : leves ou nenhum sinal visível de retinopatia diabética (ou seja, RD não referenciável) detectado com uma probabilidade de "
+			"Português": "Resultados Prio Retino : leves ou nenhum sinal visível de retinopatia diabética (i.e. RD não referenciável) detectado com uma probabilidade de "
 		},
 		{
 			"English": " for ",
@@ -116,20 +116,45 @@
 			"Français": "signes potentiels de RD sévère ou supérieure détectés avec une probabilité de ",
 			"Português": "sinais potenciais de RD grave ou superior detectados com uma probabilidade de "
 		},
-    		{
-  			"English": " Disease severity:  ",
-  			"Français": " Stade de la maladie:  ",
+    {
+  		"English": " Disease severity:  ",
+  		"Français": " Stade de la maladie:  ",
 			"Português": " Estágio da doença:  "
-    		},
-	  	{
+    },
+	  {
 			"English": "Set Prio Retino language",
-    			"Français": "Définir la langue de Prio Retino",
-      			"Português": "Definir idioma Prio Retino"
-  		},
-	  	{
-			"English": "Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image.  Do not change the selected language or patient references during an analysis, you might be charged further otherwise.",
-    			"Français": "Veuillez d'abord réinitialiser Prio Retino, puis suivez ces instructions: 1. Sélectionnez votre langue, 2. Insérez l'identifiant du patient et 3. Chargez une image du fond d'oeil. Ne changez pas la langue sélectionnée ou les références du patient pendant une analyse, sinon vous pourriez être facturé davantage.",
-      			"Português": "Reinicie o Prio Retino primeiro e, em seguida, siga estas instruções: 1. Selecione o seu idioma, 2. Insira o identificador do paciente e 3. Carregue uma imagem do fundo de olho. Não altere o idioma selecionado ou as referências do paciente durante uma análise, caso contrário, você poderá ser cobrado."
-  		}
+    	"Français": "Définir la langue de Prio Retino",
+    	"Português": "Definir idioma Prio Retino"
+  	},
+	  {
+			"English": "Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image.",
+    	"Français": "Veuillez d'abord réinitialiser Prio Retino, puis suivez ces instructions: 1. Sélectionnez votre langue, 2. Insérez l'identifiant du patient et 3. Chargez une image du fond d'oeil.",
+    	"Português": "Reinicie o Prio Retino primeiro e, em seguida, siga estas instruções: 1. Selecione o seu idioma, 2. Insira o identificador do paciente e 3. Carregue uma imagem do fundo de olho."
+  	},
+  	{
+			"English": "Prio Retino results : low-risk or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of ",
+    	"Français": "Résultats de Prio Retino : faible risque ou aucun signe visible de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
+    	"Português": "Resultados Prio Retino : baixo risco ou nenhum sinal visível de glaucoma (i.e. glaucoma não referenciável) detectado com uma probabilidade de "
+  	},
+  	{
+  	  "English": "Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk) detected with a probability of ",
+    	"Français": "Résultats de Prio Retino : glaucome référable (i.e. vrai glaucome, glaucome prépérimétrique ou fort risque) détecté avec une probabilité de ",
+    	"Português": "Resultados Prio Retino : glaucoma referenciável (isto é, glaucoma verdadeiro, pré-perimétrico ou glaucoma de alto risco) detectado com uma probabilidade de "
+  	},
+  	{
+  	  "English": "Display pre-diagnostic results for :",
+    	"Français": "Afficher les résultats de pré-diagnostic pour :",
+    	"Português": "Veja os resultados do pré-diagnóstico para:"
+  	},
+  	{
+  	  "English": "Diabetic retinopathy and maculopathy",
+    	"Français": "Rétinopathie et maculopathie diabétique",
+    	"Português": "Retinopatia diabética e maculopatia"
+  	},
+    {
+      "English": "Glaucoma",
+    	"Français": "Glaucome",
+    	"Português": "Glaucoma"
+    }
 	]
 }
