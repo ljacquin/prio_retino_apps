@@ -314,12 +314,16 @@ server <- shinyServer(
     hide(id = "loading-content", anim = TRUE, animType = "fade", time = 4)
     show("app-content")
     
+    # hide the loading message when the reset of the server function has executed
+    hide(id = "loading-content", anim = TRUE, animType = "fade", time = 4)
+    show("app-content")
+
     # create reactive values for input file and patient id
     rv <- reactiveValues(
       file1 = NULL,
       patient_id = NULL,
     )
-    
+
     # reset input file and patient id
     observeEvent(input$reset, {
       rv$file1 <- NULL
@@ -331,6 +335,10 @@ server <- shinyServer(
     # set patient id during non analysis state only
     observeEvent(input$patient_id, {
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
+
+    # set patient id during non analysis state only
+    observeEvent(input$patient_id, {
+      non_analysis_state <- (list_out_prio_retino()$out_prio_retino_txt == "")
       if (non_analysis_state
       ) {
         rv$patient_id <- input$patient_id
@@ -340,6 +348,10 @@ server <- shinyServer(
     # set input file during non analysis state only
     observeEvent(input$file1, {
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
+
+    # set input file during non analysis state only
+    observeEvent(input$file1, {
+      non_analysis_state <- (list_out_prio_retino()$out_prio_retino_txt == "")
       if (non_analysis_state
       ) {
         rv$file1 <- input$file1
@@ -349,6 +361,10 @@ server <- shinyServer(
     # set language during non analysis state only
     observeEvent(input$selected_language, {
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
+
+    # set language during non analysis state only
+    observeEvent(input$selected_language, {
+      non_analysis_state <- (list_out_prio_retino()$out_prio_retino_txt == "")
       if (non_analysis_state
       ) {
         # Here is where we update language in session
@@ -368,7 +384,12 @@ server <- shinyServer(
     observeEvent(input$print, {
       js$winprint()
     })
-    
+
+    # print
+    observeEvent(input$print, {
+      js$winprint()
+    })
+
     # make prio computations and return results as a list
     list_out_prio_retino <- reactive({
       # initialize an empty list for prio retino results
@@ -407,7 +428,6 @@ server <- shinyServer(
           fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
           
           # resize and crop image transformed_target_image
-          # resize_image(name = 'www/TRAIN000106.jpg', desired_size = desired_size)
           resize_image(name = rv$file1$datapath, desired_size = desired_size)
           list_out_prio_retino$resized_cropped_target_image <- image_read("www/resized_cropped_target_image.jpg")
           
@@ -533,6 +553,7 @@ server <- shinyServer(
         } else {
           out_dr_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image."), "</font>"))
           out_glauco_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image."), "</font>"))
+          out_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image."), "</font>"))
         }
         list_out_prio_retino$out_dr_prio_retino_txt <- out_dr_prio_retino_txt
         list_out_prio_retino$out_glauco_prio_retino_txt <- out_glauco_prio_retino_txt
@@ -547,11 +568,14 @@ server <- shinyServer(
         list_out_prio_retino$out_glauco_prio_retino_txt <- ""
       }
       list_out_prio_retino
-    })
-    
+    })    
     # return human readable results as text for dr
     output$output_dr_text <- renderText({
       list_out_prio_retino()$out_dr_prio_retino_txt
+      
+    # return human readable results as text
+    output$outputText <- renderText({
+      list_out_prio_retino()$out_prio_retino_txt
     })
     
     # return human readable results as text for dr
