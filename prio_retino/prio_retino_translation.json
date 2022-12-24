@@ -78,12 +78,12 @@
 		},
 		{
 			"English": "- Referable glaucoma: true glaucoma, pre-perimetric glaucoma or high-risk suspect. AAO recommendations: repeat examination every 1 to 2 months until disease stabilization",
-			"Français": "- Glaucome référable : vrai glaucome, glaucome pré-périmétrique ou suspect à haut risque. Recommandations de l'AAO : répéter l'examen tous les 1 à 2 mois jusqu'à stabilisation de la maladie",
+			"Français": "- Glaucome référable : vrai glaucome, glaucome pré-périmétrique ou haut risque suspecté. Recommandations de l'AAO : répéter l'examen tous les 1 à 2 mois jusqu'à stabilisation de la maladie",
 			"Português": "- Glaucoma referenciável: glaucoma verdadeiro, glaucoma pré-perimétrico ou suspeito de alto risco. Recomendações da AAO: Repetir o exame a cada 1-2 meses até a estabilização da doença"
 		},
 		{
 			"English": "- Non referable glaucoma: low-risk suspect or no visible sign of glaucoma. AAO recommendations: repeat examination annually",
-			"Français": "- Glaucome non référable: suspect à faible risque ou aucun signe visible de glaucome. Recommandations de l'AAO: répéter l'examen chaque année",
+			"Français": "- Glaucome non référable: faible risque suspecté ou aucun signe visible de glaucome. Recommandations de l'AAO: répéter l'examen chaque année",
 			"Português": "- Glaucoma não referenciável: suspeita de baixo risco ou sem sinais visíveis de glaucoma. Recomendações da AAO: Repetir o exame todos os anos"
 		},
 		{
@@ -143,12 +143,12 @@
   		},
   		{
 			"English": "Prio Retino results : low-risk suspect or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of ",
-		    	"Français": "Résultats de Prio Retino : suspect à faible risque ou aucun signe visible de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
-    			"Português": "Resultados Prio Retino : suspeita de baixo risco ou nenhum sinal visível de glaucoma (i.e. glaucoma não remissível) detectado com probabilidade de "
+		    	"Français": "Résultats de Prio Retino : faible risque suspecté ou aucun signe visible de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
+    			"Português": "Resultados Prio Retino : suspeita de baixo risco ou nenhum sinal visível de glaucoma (i.e. glaucoma não referenciável) detectado com probabilidade de "
   		},
   		{
   	  		"English": "Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk suspect) detected with a probability of ",
-    			"Français": "Résultats de Prio Retino : glaucome référable (i.e. vrai glaucome, glaucome prépérimétrique ou suspect à haut risque) détecté avec une probabilité de ",
+    			"Français": "Résultats de Prio Retino : glaucome référable (i.e. vrai glaucome, glaucome pré-périmétrique ou haut risque suspecté) détecté avec une probabilité de ",
     			"Português": "Resultados Prio Retino : glaucoma referenciável (isto é, glaucoma verdadeiro, pré-perimétrico ou suspeito de alto risco) detectado com uma probabilidade de "
   		},
   		{

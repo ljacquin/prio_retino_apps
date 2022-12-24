@@ -433,7 +433,7 @@ server <- shinyServer(
               i18n$t("Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of "),
               (1 - trunc(100 * proba_dr_status) / 100), i18n$t(" for "), rv$patient_id, "."
             )
-            dr_color <- "#2ee609"
+            dr_color <- "#49DC67"
             proba_maculo <- 1 - as.numeric(cnn_binary_classifier_3 %>% predict(x_target))
             ifelse((proba_maculo <= 0.5), Maculo_status <- 0, Maculo_status <- 1)
             if (Maculo_status) {
@@ -489,7 +489,7 @@ server <- shinyServer(
               i18n$t("Prio Retino results : low-risk suspect or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of "),
               (1 - trunc(100 * proba_glauco_status) / 100), i18n$t(" for "), rv$patient_id, "."
             )
-            glauco_color <- "#2ee609"
+            glauco_color <- "#49DC67"
           } else {
             glauco_pre_diagnostic <- paste0(
               i18n$t("Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk suspect) detected with a probability of "),
