@@ -54,7 +54,6 @@ library(shinymanager)
 library(shinycustomloader)
 library(shiny.i18n)
 library(shinyWidgets)
-library(spatstat)
 options(encoding = "UTF-8")
 source_python("resize_image.py")
 source_python("grad_cam_2.py")
@@ -81,13 +80,13 @@ i18n$set_translation_language("English")
 tryCatch(
   {
     prio_retino_credentials <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage.csv",
-                                                    header = TRUE
+      header = TRUE
     ))
     fwrite(prio_retino_credentials, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
   },
   error = function(err) {
     prio_retino_credentials <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage_save.csv",
-                                                    header = TRUE
+      header = TRUE
     ))
   }
 )
@@ -106,7 +105,7 @@ credentials <- data.frame(
 
 # CNN model and parameters
 if (!exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") && !exists("cnn_binary_classifier_3") &&
-    !exists("cnn_binary_classifier_4") && !exists("cnn_binary_classifier_5")
+  !exists("cnn_binary_classifier_4") && !exists("cnn_binary_classifier_5")
 ) {
   cnn_binary_classifier_1 <<- load_model("xception_binary_classifier_1_full_arch_avg_pool_ratio_10_1_epochs_11.h5")
   cnn_binary_classifier_2 <<- load_model("xception_binary_classifier_2_full_arch_avg_pool.h5")
@@ -148,19 +147,19 @@ appCSS <- "
 ui <- secure_app(
   choose_language = FALSE,
   tags_top = tags$img(src = "Gaiha_prio_retino_login.png", width = 300),
-  
+
   # ui <- fluidPage(
   fluidPage(
     HTML('<meta name="viewport" content="width=1024">'),
     useShinyjs(),
     inlineCSS(appCSS),
-    
+
     # Loading message
     div(
       id = "loading-content",
       h2(i18n$t("Loading Prio Retino..."))
     ),
-    
+
     # Language selection
     shiny.i18n::usei18n(i18n),
     div(
@@ -181,7 +180,7 @@ ui <- secure_app(
         )
       )
     ),
-    
+
     # The main app code goes here
     hidden(
       div(
@@ -193,7 +192,7 @@ ui <- secure_app(
             column(width = 1, offset = 10, style = "padding:6px;"),
             #
             titlePanel(h5(p(strong(i18n$t("Do not refresh the page, press 'Reset' to clean up before each new analysis"))),
-                          style = "color:red", align = "left"
+              style = "color:red", align = "left"
             )),
             actionButton("reset", i18n$t("Reset")),
             titlePanel(h5(p(""), align = "left")),
@@ -201,14 +200,14 @@ ui <- secure_app(
             textInput("patient_id", i18n$t("Insert patient identifier"), value = ""),
             fileInput(
               input = "file1",
-              label = i18n$t("Upload retinal fundus image"),
+              label = i18n$t("Upload fundus image"),
               accept = c(".png", ".jpeg", ".jpg")
             ),
             selectInput("element_id",
-                        label = p(i18n$t("Display pre-diagnostic results for :"),
-                                  style = "text-align:center;color:red;font-size:100%"
-                        ),
-                        c("Diabetic retinopathy and maculopathy", "Glaucoma")
+              label = p(i18n$t("Display pre-diagnostic results for :"),
+                style = "text-align:center;color:red;font-size:100%"
+              ),
+              c("Diabetic retinopathy and maculopathy", "Glaucoma")
             ),
             verbatimTextOutput("res_auth"),
             width = 3
@@ -238,14 +237,14 @@ ui <- secure_app(
             ),
             fluidRow(
               column(width = 6, withLoader(imageOutput("outputImage1"),
-                 type = "image", loader = "computation_loader.gif"
+                type = "image", loader = "computation_loader.gif"
               )),
               conditionalPanel(
                 'input.element_id=="Diabetic retinopathy and maculopathy"||
                 input.element_id=="Rétinopathie et maculopathie diabétique"||
                 input.element_id=="Retinopatia diabética e maculopatia"',
                 column(width = 6, withLoader(imageOutput("outputImage2"),
-                 type = "image", loader = "computation_loader.gif"
+                  type = "image", loader = "computation_loader.gif"
                 ))
               ),
               conditionalPanel(
@@ -253,7 +252,7 @@ ui <- secure_app(
                 input.element_id=="Glaucome"||
                 input.element_id=="Glaucoma"',
                 column(width = 6, withLoader(imageOutput("outputImage3"),
-                 type = "image", loader = "computation_loader.gif"
+                  type = "image", loader = "computation_loader.gif"
                 ))
               )
             )
@@ -262,20 +261,26 @@ ui <- secure_app(
         useShinyjs(),
         extendShinyjs(text = "shinyjs.winprint = function(){ window.print(); }", functions = c("winprint")),
         actionButton("print", i18n$t("Print Prio Retino results to PDF")),
-        titlePanel(h6(p(strong(i18n$t("Remarks and definitions:"))), style = "color:#0c7683", align = "left")),
+        titlePanel(h6(p(strong(i18n$t("Remarks, definitions and recommendations:"))), style = "color:#0c7683", align = "left")),
         titlePanel(h6(i18n$t("- Prio Retino results are given on an idicative basis, the diagnosis should be established by an ophthalmologist"),
+          style = "color:#0c7683", align = "left"
+        )),
+        titlePanel(h6(i18n$t("- The analyzed data is deleted and not stored by Prio Retino after each reset"),
                       style = "color:#0c7683", align = "left"
         )),
         titlePanel(h6(i18n$t("- ICDR: International Clinical Diabetic Retinopathy severity scale; AAO: American Academy of Ophthalmology"),
+          style = "color:#0c7683", align = "left"
+        )),
+        titlePanel(h6(i18n$t("- Non referable diabetic retinopathy (DR): mild or no visible signs of DR according to ICDR. AAO recommendations: repeat examination annually for non referable DR"),
+          style = "color:#0c7683", align = "left"
+        )),
+        titlePanel(h6(i18n$t("- Referable diabetic retinopathy (DR): moderate or superior signs of DR according to ICDR. AAO recommendations: repeat examination within 6 or 3 months for moderate or superior signs of DR respectively"),
+          style = "color:#0c7683", align = "left"
+        )),
+        titlePanel(h6(i18n$t("- Non referable glaucoma: low-risk suspect or no visible sign of glaucoma. AAO recommendations: repeat examination annually"),
                       style = "color:#0c7683", align = "left"
         )),
-        titlePanel(h6(i18n$t("- Non referable diabetic retinopathy (DR): mild or no visible signs of DR according to ICDR. AAO recommendations: repeat retinal examination annually for non referable DR"),
-                      style = "color:#0c7683", align = "left"
-        )),
-        titlePanel(h6(i18n$t("- Referable diabetic retinopathy (DR): moderate or superior signs of DR according to ICDR. AAO recommendations: repeat retinal examination within 6 or 3 months for moderate or superior signs of DR respectively"),
-                      style = "color:#0c7683", align = "left"
-        )),
-        titlePanel(h6(i18n$t("- The analyzed data is deleted and not stored by Prio Retino after each reset"),
+        titlePanel(h6(i18n$t("- Referable glaucoma: true glaucoma, pre-perimetric glaucoma or high-risk suspect. AAO recommendations: repeat examination every 1 to 2 months until disease stabilization"),
                       style = "color:#0c7683", align = "left"
         )),
         h5(HTML(paste0(
@@ -294,23 +299,23 @@ ui <- secure_app(
 server <- shinyServer(
   function(input, output, session) {
     options(shiny.maxRequestSize = 4 * 1024^2)
-    
+
     # check credentials
     result_auth <- secure_server(check_credentials = check_credentials(credentials))
     output$res_auth <- renderPrint({
       reactiveValuesToList(result_auth)
     })
-    
+
     # hide the loading message when the reset of the server function has executed
     hide(id = "loading-content", anim = TRUE, animType = "fade", time = 4)
     show("app-content")
-    
+
     # create reactive values for input file and patient id
     rv <- reactiveValues(
       file1 = NULL,
       patient_id = NULL,
     )
-    
+
     # reset input file and patient id
     observeEvent(input$reset, {
       rv$file1 <- NULL
@@ -318,7 +323,7 @@ server <- shinyServer(
       reset("file1")
       reset("patient_id")
     })
-    
+
     # set patient id during non analysis state only
     observeEvent(input$patient_id, {
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
@@ -327,7 +332,7 @@ server <- shinyServer(
         rv$patient_id <- input$patient_id
       }
     })
-    
+
     # set input file during non analysis state only
     observeEvent(input$file1, {
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
@@ -336,7 +341,7 @@ server <- shinyServer(
         rv$file1 <- input$file1
       }
     })
-    
+
     # set language during non analysis state only
     observeEvent(input$selected_language, {
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
@@ -346,7 +351,7 @@ server <- shinyServer(
         shiny.i18n::update_lang(session, input$selected_language)
       }
     })
-    
+
     # translate analyzed diseases
     observe({
       updateSelectInput(session, "element_id",
@@ -354,12 +359,12 @@ server <- shinyServer(
         choices = i18n$t(c("Diabetic retinopathy and maculopathy", "Glaucoma"))
       )
     })
-    
+
     # print results
     observeEvent(input$print, {
       js$winprint()
     })
-    
+
     # make prio computations and return results as a list
     list_out_prio_retino <- reactive({
       # initialize an empty list for prio retino results
@@ -372,7 +377,7 @@ server <- shinyServer(
         out_dr_prio_retino_txt = NULL,
         out_glauco_prio_retino_txt = NULL
       )
-      
+
       if (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) {
         if ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != "")) {
           # Update login usage
@@ -380,46 +385,46 @@ server <- shinyServer(
           tryCatch(
             {
               prio_retino_cred_use_df <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage.csv",
-                                                              header = TRUE
+                header = TRUE
               ))
               fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
             },
             error = function(err) {
               prio_retino_cred_use_df <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage_save.csv",
-                                                              header = TRUE
+                header = TRUE
               ))
             }
           )
           current_count <- prio_retino_cred_use_df[match(auth_ind, prio_retino_cred_use_df$Login), ]$Count
           prio_retino_cred_use_df[match(auth_ind, prio_retino_cred_use_df$Login), ]$Count <- current_count + 1
           prio_retino_cred_use_df[match(auth_ind, prio_retino_cred_use_df$Login), ]$Last_analysis_timestamp <- paste0(as.character(Sys.time()), "sec")
-          
+
           fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage.csv")
           fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
-          
+
           # resize and crop image transformed_target_image
           resize_image(name = rv$file1$datapath, desired_size = desired_size)
           list_out_prio_retino$resized_cropped_target_image <- image_read("www/resized_cropped_target_image.jpg")
-          
+
           # transform target image
           transformed_target_image <- image_scale(list_out_prio_retino$resized_cropped_target_image, desired_size)
           transformed_target_image <- image_resize(transformed_target_image, desired_size)
           transformed_target_image <- magick2cimg(transformed_target_image)
           Blur_target_img <- boxblur(transformed_target_image, blur_factor)
           transformed_target_image <- transformed_target_image - Blur_target_img
-          
+
           # save and read transformed target image with correct size (no choice for saving since no librairies are availabe)
           save.image(transformed_target_image, "www/transformed_target_image.jpg", quality = 1)
           list_out_prio_retino$transformed_target_image <- image_load("www/transformed_target_image.jpg")
           list_out_prio_retino$resized_transformed_target_image <- image_load("www/transformed_target_image.jpg",
-                                                                              target_size = c(img_size_cnn, img_size_cnn)
+            target_size = c(img_size_cnn, img_size_cnn)
           )
-          
+
           # convert transformed image to array
           x_target <- image_to_array(list_out_prio_retino$resized_transformed_target_image)
           x_target <- array_reshape(x_target, c(1, dim(x_target)))
           x_target <- x_target / 255
-          
+
           # compute dr status
           proba_dr_status <- as.numeric(cnn_binary_classifier_1 %>% predict(x_target))
           ifelse((proba_dr_status <= 0.5), pred_dr_status <- 0, pred_dr_status <- 1)
@@ -428,7 +433,7 @@ server <- shinyServer(
               i18n$t("Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of "),
               (1 - trunc(100 * proba_dr_status) / 100), i18n$t(" for "), rv$patient_id, "."
             )
-            dr_color <- "#00FF00"
+            dr_color <- "#2ee609"
             proba_maculo <- 1 - as.numeric(cnn_binary_classifier_3 %>% predict(x_target))
             ifelse((proba_maculo <= 0.5), Maculo_status <- 0, Maculo_status <- 1)
             if (Maculo_status) {
@@ -441,19 +446,19 @@ server <- shinyServer(
           } else {
             proba_dr_level <- as.numeric(cnn_binary_classifier_2 %>% predict(x_target))
             ifelse((proba_dr_level <= 0.5), pred_dr_level <- 0, pred_dr_level <- 1)
-            
+
             proba_maculo <- 1 - as.numeric(cnn_binary_classifier_4 %>% predict(x_target))
             ifelse((proba_maculo <= 0.5), Maculo_status <- 0, Maculo_status <- 1)
-            
+
             ifelse((pred_dr_level == 0),
-                   dr_level <- paste0(
-                     i18n$t("potential signs of moderate DR detected with a probability of "),
-                     (1 - trunc(100 * proba_dr_level) / 100)
-                   ),
-                   dr_level <- paste0(
-                     i18n$t("potential signs of severe or superior DR detected with a probability of "),
-                     (trunc(100 * proba_dr_level) / 100)
-                   )
+              dr_level <- paste0(
+                i18n$t("potential signs of moderate DR detected with a probability of "),
+                (1 - trunc(100 * proba_dr_level) / 100)
+              ),
+              dr_level <- paste0(
+                i18n$t("potential signs of severe or superior DR detected with a probability of "),
+                (trunc(100 * proba_dr_level) / 100)
+              )
             )
             dr_pre_diagnostic <- paste0(
               i18n$t("Prio Retino results : referable diabetic retinopathy detected with a probability of "), (trunc(100 * proba_dr_status) / 100),
@@ -466,7 +471,7 @@ server <- shinyServer(
               )
             }
             dr_color <- c("#FF5050", "#FF5050")[pred_dr_level + 1]
-            
+
             # compute grad classification activation mapping for dr status
             list_out_prio_retino$grad_cam_dr_transformed_target_image <- magick::image_read(compute_grad_cam(
               cnn_binary_classifier_1,
@@ -475,19 +480,19 @@ server <- shinyServer(
               last_conv_layer_name
             ) / 255)
           } # end else for pred_dr_status test
-          
+
           # compute glauco status
           proba_glauco_status <- as.numeric(cnn_binary_classifier_5 %>% predict(x_target))
           ifelse((proba_glauco_status <= 0.5), glauco_status <- 0, glauco_status <- 1)
           if (glauco_status == 0) {
             glauco_pre_diagnostic <- paste0(
-              i18n$t("Prio Retino results : low-risk or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of "),
+              i18n$t("Prio Retino results : low-risk suspect or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of "),
               (1 - trunc(100 * proba_glauco_status) / 100), i18n$t(" for "), rv$patient_id, "."
             )
-            glauco_color <- "#00FF00"
+            glauco_color <- "#2ee609"
           } else {
             glauco_pre_diagnostic <- paste0(
-              i18n$t("Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk) detected with a probability of "),
+              i18n$t("Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk suspect) detected with a probability of "),
               trunc(100 * proba_glauco_status) / 100, i18n$t(" for "), rv$patient_id, "."
             )
             glauco_color <- "#FF5050"
@@ -499,15 +504,15 @@ server <- shinyServer(
               last_conv_layer_name
             ) / 255)
           } # end glauco status computation
-          
+
           # convert transformed images to magick object
           list_out_prio_retino$transformed_target_image <- magick::image_read(image_array_resize(list_out_prio_retino$transformed_target_image,
-                                                                                                 height = img_size_cnn, width = img_size_cnn
+            height = img_size_cnn, width = img_size_cnn
           ) / 255)
           list_out_prio_retino$resized_transformed_target_image <- magick::image_read(image_array_resize(list_out_prio_retino$resized_transformed_target_image,
-                                                                                                         height = img_size_cnn, width = img_size_cnn
+            height = img_size_cnn, width = img_size_cnn
           ) / 255)
-          
+
           # compute image quality status
           img_score <- as.numeric(compute_image_brisque_score("www/resized_cropped_target_image.jpg") / 100)
           ifelse((img_score < 0.48), img_quality <- 1, img_quality <- 0)
@@ -538,23 +543,23 @@ server <- shinyServer(
       }
       list_out_prio_retino
     })
-    
+
     # return human readable results as text for dr
     output$output_dr_text <- renderText({
       list_out_prio_retino()$out_dr_prio_retino_txt
     })
-    
+
     # return human readable results as text for dr
     output$output_glauco_text <- renderText({
       list_out_prio_retino()$out_glauco_prio_retino_txt
     })
-    
+
     # output original image
     output$outputImage1 <- renderImage(
       {
         test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
           ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
-        
+
         if (!test_render_img) {
           # Default image
           list(
@@ -572,13 +577,13 @@ server <- shinyServer(
       },
       deleteFile = FALSE
     )
-    
-    # output transformed image with or without grad CAM
+
+    # output transformed image with or without grad CAM for diabetic retinopathy and maculopathy
     output$outputImage2 <- renderImage(
       {
         test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
           ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
-        
+
         if (!test_render_img) {
           list(
             src = "www/BLANK.jpg", contentType = "image/jpg",
@@ -604,13 +609,13 @@ server <- shinyServer(
       },
       deleteFile = FALSE
     )
-    
-    # output transformed image with or without grad CAM
+
+    # output transformed image with or without grad CAM for glaucoma
     output$outputImage3 <- renderImage(
       {
         test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
           ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
-        
+
         if (!test_render_img) {
           list(
             src = "www/BLANK.jpg", contentType = "image/jpg",

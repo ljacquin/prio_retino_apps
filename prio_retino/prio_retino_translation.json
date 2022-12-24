@@ -42,7 +42,7 @@
 			"Português": "Inserir 'olho esquerdo' ou 'olho direito'"
 		},
 		{
-			"English": "Upload retinal fundus image",
+			"English": "Upload fundus image",
 			"Français": "Charger l'image du fond d'oeil",
 			"Português": "Carregar a imagem do fundo do olho"
 		},
@@ -52,9 +52,9 @@
 			"Português": "Imprimir ou salvar os resultados Prio Retino em PDF"
 		},
 		{
-			"English": "Remarks and definitions:",
-			"Français": "Remarque et définitions:",
-			"Português": "Notas e definições:"
+			"English": "Remarks, definitions and recommendations:",
+			"Français": "Remarques, définitions et recommandations:",
+			"Português": "Notas, definições e recomendações:"
 		},
 		{
 			"English": "- Prio Retino results are given on an idicative basis, the diagnosis should be established by an ophthalmologist",
@@ -67,14 +67,24 @@
 			"Português": "- EIRD: Escala Internacional de Retinopatia diabética; AAO: Academia Americana de Oftalmologia"
 		},
 		{
-			"English": "- Non referable diabetic retinopathy (DR): mild or no visible signs of DR according to ICDR. AAO recommendations: repeat retinal examination annually for non referable DR",
+			"English": "- Non referable diabetic retinopathy (DR): mild or no visible signs of DR according to ICDR. AAO recommendations: repeat examination annually for non referable DR",
 			"Français": "- Rétinopathie diabétique (RD) non référable: léger ou aucun signe visible de la RD selon l'EIRD. Recommandations de l'AAO: répéter l'examen annuellement pour la RD non référable",
-			"Português": "- Retinopatia diabética não-refratária (RD): sinais leves ou não visíveis de RD de acordo com a EIRD. Recomendações da AAO: repetir anualmente para DR não-referenciáveis"
+			"Português": "- Retinopatia diabética (RD) não-referenciável: sinais leves ou não visíveis de RD de acordo com a EIRD. Recomendações da AAO: repetir anualmente para RD não-referenciável"
 		},
 		{
-			"English": "- Referable diabetic retinopathy (DR): moderate or superior signs of DR according to ICDR. AAO recommendations: repeat retinal examination within 6 or 3 months for moderate or superior signs of DR respectively",
+			"English": "- Referable diabetic retinopathy (DR): moderate or superior signs of DR according to ICDR. AAO recommendations: repeat examination within 6 or 3 months for moderate or superior signs of DR respectively",
 			"Français": "- Rétinopathie diabétique (RD) référable: signes modérés ou supérieurs de la RD selon l'EIRD. Recommandations de l'AAO: répéter l'examen respectivement tous les 6 ou 3 mois pour des signes modérés ou supérieurs de RD",
 			"Português": "- Retinopatia diabética (RD) referenciável : sinais moderados ou maiores de RD, de acordo com a EIRD. Recomendações da AAO: repetir o examea cada 6 ou 3 meses, respectivamente, para sinais moderados ou maiores de RD "
+		},
+		{
+			"English": "- Referable glaucoma: true glaucoma, pre-perimetric glaucoma or high-risk suspect. AAO recommendations: repeat examination every 1 to 2 months until disease stabilization",
+			"Français": "- Glaucome référable : vrai glaucome, glaucome pré-périmétrique ou suspect à haut risque. Recommandations de l'AAO : répéter l'examen tous les 1 à 2 mois jusqu'à stabilisation de la maladie",
+			"Português": "- Glaucoma referenciável: glaucoma verdadeiro, glaucoma pré-perimétrico ou suspeito de alto risco. Recomendações da AAO: Repetir o exame a cada 1-2 meses até a estabilização da doença"
+		},
+		{
+			"English": "- Non referable glaucoma: low-risk suspect or no visible sign of glaucoma. AAO recommendations: repeat examination annually",
+			"Français": "- Glaucome non référable: suspect à faible risque ou aucun signe visible de glaucome. Recommandations de l'AAO: répéter l'examen chaque année",
+			"Português": "- Glaucoma não referenciável: suspeita de baixo risco ou sem sinais visíveis de glaucoma. Recomendações da AAO: Repetir o exame todos os anos"
 		},
 		{
 			"English": "- The analyzed data is deleted and not stored by Prio Retino after each reset",
@@ -99,7 +109,7 @@
 		{
 			"English": "Prio Retino results : referable diabetic retinopathy detected with a probability of ",
 			"Français": "Résultats de Prio Retino : rétinopathie diabétique référable détectée avec une probabilité de ",
-			"Português": "Resultados Prio Retino : Retinopatia diabética refratária detectada com uma probabilidade de "
+			"Português": "Resultados Prio Retino : Retinopatia diabética referenciável detectada com uma probabilidade de "
 		},
 		{
 			"English": "Warning: possible presence of maculopathy detected with a probability of ",
@@ -132,14 +142,14 @@
     			"Português": "Reinicie o Prio Retino primeiro e, em seguida, siga estas instruções: 1. Selecione o seu idioma, 2. Insira o identificador do paciente e 3. Carregue uma imagem do fundo de olho."
   		},
   		{
-			"English": "Prio Retino results : low-risk or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of ",
-		    	"Français": "Résultats de Prio Retino : faible risque ou aucun signe visible de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
-    			"Português": "Resultados Prio Retino : baixo risco ou nenhum sinal visível de glaucoma (i.e. glaucoma não referenciável) detectado com uma probabilidade de "
+			"English": "Prio Retino results : low-risk suspect or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of ",
+		    	"Français": "Résultats de Prio Retino : suspect à faible risque ou aucun signe visible de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
+    			"Português": "Resultados Prio Retino : suspeita de baixo risco ou nenhum sinal visível de glaucoma (i.e. glaucoma não remissível) detectado com probabilidade de "
   		},
   		{
-  	  		"English": "Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk) detected with a probability of ",
-    			"Français": "Résultats de Prio Retino : glaucome référable (i.e. vrai glaucome, glaucome prépérimétrique ou fort risque) détecté avec une probabilité de ",
-    			"Português": "Resultados Prio Retino : glaucoma referenciável (isto é, glaucoma verdadeiro, pré-perimétrico ou glaucoma de alto risco) detectado com uma probabilidade de "
+  	  		"English": "Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk suspect) detected with a probability of ",
+    			"Français": "Résultats de Prio Retino : glaucome référable (i.e. vrai glaucome, glaucome prépérimétrique ou suspect à haut risque) détecté avec une probabilité de ",
+    			"Português": "Resultados Prio Retino : glaucoma referenciável (isto é, glaucoma verdadeiro, pré-perimétrico ou suspeito de alto risco) detectado com uma probabilidade de "
   		},
   		{
   	  		"English": "Display pre-diagnostic results for :",
