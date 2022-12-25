@@ -230,16 +230,34 @@ ui <- secure_app(
               'input.element_id=="Diabetic retinopathy and maculopathy"||
                input.element_id=="Rétinopathie et maculopathie diabétique"||
                input.element_id=="Retinopatia diabética e maculopatia"',
-              h4(htmlOutput("output_dr_prio_retino_text"), align = "left")
+              h4(htmlOutput("output_dr_text"), align = "left")
             ),
             conditionalPanel(
               'input.element_id=="Glaucoma"||
                input.element_id=="Glaucome"||
                input.element_id=="Glaucoma"',
-              h4(htmlOutput("output_glauco_prio_retino_text"), align = "left")
+              h4(htmlOutput("output_glauco_text"), align = "left")
             ),
-            withLoader(imageOutput("outputImage"),
-              type = "image", loader = "computation_loader_new.gif"
+            fluidRow(
+              column(width = 6, withLoader(imageOutput("outputImage1"),
+                type = "image", loader = "computation_loader.gif"
+              )),
+              conditionalPanel(
+                'input.element_id=="Diabetic retinopathy and maculopathy"||
+                input.element_id=="Rétinopathie et maculopathie diabétique"||
+                input.element_id=="Retinopatia diabética e maculopatia"',
+                column(width = 6, withLoader(imageOutput("outputImage2"),
+                  type = "image", loader = "computation_loader.gif"
+                ))
+              ),
+              conditionalPanel(
+                'input.element_id=="Glaucoma"||
+                input.element_id=="Glaucome"||
+                input.element_id=="Glaucoma"',
+                column(width = 6, withLoader(imageOutput("outputImage3"),
+                  type = "image", loader = "computation_loader.gif"
+                ))
+              )
             )
           )
         ),
@@ -251,7 +269,7 @@ ui <- secure_app(
           style = "color:#0c7683", align = "left"
         )),
         titlePanel(h6(i18n$t("- The analyzed data is deleted and not stored by Prio Retino after each reset"),
-          style = "color:#0c7683", align = "left"
+                      style = "color:#0c7683", align = "left"
         )),
         titlePanel(h6(i18n$t("- ICDR: International Clinical Diabetic Retinopathy severity scale; AAO: American Academy of Ophthalmology"),
           style = "color:#0c7683", align = "left"
@@ -263,10 +281,10 @@ ui <- secure_app(
           style = "color:#0c7683", align = "left"
         )),
         titlePanel(h6(i18n$t("- Non referable glaucoma: low-risk suspect or no visible sign of glaucoma. AAO recommendations: repeat examination annually"),
-          style = "color:#0c7683", align = "left"
+                      style = "color:#0c7683", align = "left"
         )),
         titlePanel(h6(i18n$t("- Referable glaucoma: true glaucoma, pre-perimetric glaucoma or high-risk suspect. AAO recommendations: repeat examination every 1 to 2 months until disease stabilization"),
-          style = "color:#0c7683", align = "left"
+                      style = "color:#0c7683", align = "left"
         )),
         h5(HTML(paste0(
           "<center><a href='https://keria.io/' target='_blank'><u><font color=\"#000000\">", i18n$t("Gaiha is a trademark of KerIA"),
@@ -357,8 +375,8 @@ server <- shinyServer(
         resized_cropped_target_image = NULL,
         transformed_target_image = NULL,
         resized_transformed_target_image = NULL,
-        out_orig_dr_img = NULL,
-        out_orig_glauco_img = NULL,
+        grad_cam_dr_transformed_target_image = NULL,
+        grad_cam_glauco_transformed_target_image = NULL,
         out_dr_prio_retino_txt = NULL,
         out_glauco_prio_retino_txt = NULL
       )
@@ -410,48 +428,23 @@ server <- shinyServer(
           x_target <- array_reshape(x_target, c(1, dim(x_target)))
           x_target <- x_target / 255
 
-          # make an output for original image
-          out_orig_img <- image_scale(list_out_prio_retino$resized_cropped_target_image, "1024x787!") %>%
-            image_annotate(i18n$t("Original fundus image"),
-              font = "monospace",
-              color = "white", size = 30
-            )
-
           # compute dr status
           proba_dr_status <- as.numeric(cnn_binary_classifier_1 %>% predict(x_target))
           ifelse((proba_dr_status <= 0.5), pred_dr_status <- 0, pred_dr_status <- 1)
-
           if (pred_dr_status == 0) {
-            # make an img output for no dr
-            out_dr_img <- image_scale(magick::image_read(
-              image_array_resize(list_out_prio_retino$transformed_target_image,
-                height = img_size_cnn, width = img_size_cnn
-              ) / 255
-            ), "1024x787!")
-
-            # make a txt output for no dr
-            out_dr_txt <- paste0(
+            dr_pre_diagnostic <- paste0(
               i18n$t("Prio Retino results : mild or no visible signs of diabetic retinopathy (i.e. non referable DR) detected with a probability of "),
               (1 - trunc(100 * proba_dr_status) / 100), i18n$t(" for "), rv$patient_id, "."
             )
             dr_color <- "#49DC67"
-
-            # make a txt and img output for no dr and maculo
             proba_maculo <- 1 - as.numeric(cnn_binary_classifier_3 %>% predict(x_target))
             ifelse((proba_maculo <= 0.5), Maculo_status <- 0, Maculo_status <- 1)
             if (Maculo_status) {
-              out_dr_txt <- paste0(
-                out_dr_txt, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
+              dr_pre_diagnostic <- paste0(
+                dr_pre_diagnostic, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
                 (trunc(100 * proba_maculo) / 100)
               )
               dr_color <- "#FF5050"
-              out_dr_img <- out_dr_img %>% image_annotate(i18n$t("Detected areas for maculopathy"),
-                font = "monospace", color = "none", size = 30
-              )
-            } else {
-              out_dr_img <- out_dr_img %>% image_annotate(i18n$t("No detected areas for diabetic retinopathy and/or maculopathy"),
-                font = "monospace", color = "none", size = 30
-              )
             }
           } else {
             proba_dr_level <- as.numeric(cnn_binary_classifier_2 %>% predict(x_target))
@@ -470,69 +463,58 @@ server <- shinyServer(
                 (trunc(100 * proba_dr_level) / 100)
               )
             )
-            out_dr_txt <- paste0(
+            dr_pre_diagnostic <- paste0(
               i18n$t("Prio Retino results : referable diabetic retinopathy detected with a probability of "), (trunc(100 * proba_dr_status) / 100),
               i18n$t(" for "), rv$patient_id, ".", i18n$t(" Disease severity:  "), dr_level, ". "
             )
             if (Maculo_status) {
-              out_dr_txt <- paste0(
-                out_dr_txt, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
+              dr_pre_diagnostic <- paste0(
+                dr_pre_diagnostic, i18n$t("Warning: possible presence of maculopathy detected with a probability of "),
                 (trunc(100 * proba_maculo) / 100)
               )
             }
             dr_color <- c("#FF5050", "#FF5050")[pred_dr_level + 1]
 
             # compute grad classification activation mapping for dr status
-            out_dr_img <- image_scale(magick::image_read(
-              compute_grad_cam(
-                cnn_binary_classifier_1,
-                list_out_prio_retino$transformed_target_image,
-                list_out_prio_retino$resized_transformed_target_image,
-                last_conv_layer_name
-              ) / 255
-            ), "1024x787!") %>% image_annotate(i18n$t("Detected areas for diabetic retinopathy and/or maculopathy"),
-              font = "monospace", color = "none", size = 30
-            )
+            list_out_prio_retino$grad_cam_dr_transformed_target_image <- magick::image_read(compute_grad_cam(
+              cnn_binary_classifier_1,
+              list_out_prio_retino$transformed_target_image,
+              list_out_prio_retino$resized_transformed_target_image,
+              last_conv_layer_name
+            ) / 255)
           } # end else for pred_dr_status test
-          list_out_prio_retino$out_orig_dr_img <- image_append(c(out_orig_img, out_dr_img))
 
           # compute glauco status
           proba_glauco_status <- as.numeric(cnn_binary_classifier_5 %>% predict(x_target))
-
           ifelse((proba_glauco_status <= 0.5), glauco_status <- 0, glauco_status <- 1)
           if (glauco_status == 0) {
-            out_glauco_txt <- paste0(
+            glauco_pre_diagnostic <- paste0(
               i18n$t("Prio Retino results : low-risk suspect or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of "),
               (1 - trunc(100 * proba_glauco_status) / 100), i18n$t(" for "), rv$patient_id, "."
             )
             glauco_color <- "#49DC67"
-            # make an img output for no glauco
-            out_glauco_img <- image_scale(magick::image_read(
-              image_array_resize(list_out_prio_retino$transformed_target_image,
-                height = img_size_cnn, width = img_size_cnn
-              ) / 255
-            ), "1024x787!") %>% image_annotate(i18n$t("No detected areas for glaucoma"),
-              font = "monospace", color = "none", size = 30
-            )
           } else {
-            out_glauco_txt <- paste0(
+            glauco_pre_diagnostic <- paste0(
               i18n$t("Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk suspect) detected with a probability of "),
               trunc(100 * proba_glauco_status) / 100, i18n$t(" for "), rv$patient_id, "."
             )
             glauco_color <- "#FF5050"
-            # compute grad classification activation mapping for glauco status
-            out_glauco_img <- image_scale(magick::image_read(
-              compute_grad_cam(
-                cnn_binary_classifier_5,
-                list_out_prio_retino$transformed_target_image,
-                list_out_prio_retino$resized_transformed_target_image,
-                last_conv_layer_name
-              ) / 255
-            ), "1024x787!") %>% image_annotate(i18n$t("Detected areas for glaucoma"),
-              font = "monospace", color = "none", size = 30
-            )
+            # compute grad classification activation mapping for dr status
+            list_out_prio_retino$grad_cam_glauco_transformed_target_image <- magick::image_read(compute_grad_cam(
+              cnn_binary_classifier_5,
+              list_out_prio_retino$transformed_target_image,
+              list_out_prio_retino$resized_transformed_target_image,
+              last_conv_layer_name
+            ) / 255)
           } # end glauco status computation
-          list_out_prio_retino$out_orig_glauco_img <- image_append(c(out_orig_img, out_glauco_img))
+
+          # convert transformed images to magick object
+          list_out_prio_retino$transformed_target_image <- magick::image_read(image_array_resize(list_out_prio_retino$transformed_target_image,
+            height = img_size_cnn, width = img_size_cnn
+          ) / 255)
+          list_out_prio_retino$resized_transformed_target_image <- magick::image_read(image_array_resize(list_out_prio_retino$resized_transformed_target_image,
+            height = img_size_cnn, width = img_size_cnn
+          ) / 255)
 
           # compute image quality status
           img_score <- as.numeric(compute_image_brisque_score("www/resized_cropped_target_image.png") / 100)
@@ -541,11 +523,11 @@ server <- shinyServer(
             dr_color <- "#EE9F27"
             glauco_color <- "#EE9F27"
             img_qual_warning <- i18n$t("Warning: low quality image detected, Prio Retino results might be unreliable. ")
-            out_dr_txt <- paste0(img_qual_warning, out_dr_txt)
-            out_glauco_txt <- paste0(img_qual_warning, out_glauco_txt)
+            dr_pre_diagnostic <- paste0(img_qual_warning, dr_pre_diagnostic)
+            glauco_pre_diagnostic <- paste0(img_qual_warning, glauco_pre_diagnostic)
           }
-          out_dr_prio_retino_txt <- HTML(paste0("<div style='background-color:", dr_color, "'>", out_dr_txt, "</div>"))
-          out_glauco_prio_retino_txt <- HTML(paste0("<div style='background-color:", glauco_color, "'>", out_glauco_txt, "</div>"))
+          out_dr_prio_retino_txt <- HTML(paste0("<div style='background-color:", dr_color, "'>", dr_pre_diagnostic, "</div>"))
+          out_glauco_prio_retino_txt <- HTML(paste0("<div style='background-color:", glauco_color, "'>", glauco_pre_diagnostic, "</div>"))
         } else {
           out_dr_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image."), "</font>"))
           out_glauco_prio_retino_txt <- HTML(paste0("<font color='#0c7683'>", i18n$t("Please reset Prio Retino first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image."), "</font>"))
@@ -565,12 +547,21 @@ server <- shinyServer(
       list_out_prio_retino
     })
 
-    # output image
-    output$outputImage <- renderImage(
+    # return human readable results as text for dr
+    output$output_dr_text <- renderText({
+      list_out_prio_retino()$out_dr_prio_retino_txt
+    })
+
+    # return human readable results as text for dr
+    output$output_glauco_text <- renderText({
+      list_out_prio_retino()$out_glauco_prio_retino_txt
+    })
+
+    # output original image
+    output$outputImage1 <- renderImage(
       {
         test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
           ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
-        list_out_prio_retino <- list_out_prio_retino()
 
         if (!test_render_img) {
           # Default image
@@ -579,27 +570,42 @@ server <- shinyServer(
             width = 1150, height = 650, align = "left"
           )
         } else {
-          # Return images for DR and/or maculopathy
-          if (input$element_id == "Diabetic retinopathy and maculopathy" ||
-            input$element_id == "Rétinopathie et maculopathie diabétique" ||
-            input$element_id == "Retinopatia diabética e maculopatia") {
+          tmpfile <- list_out_prio_retino()$resized_cropped_target_image %>%
+            image_write(tempfile(fileext = "png"), format = "png")
+          list(
+            src = tmpfile, contentType = "image/png",
+            width = width_img_size, height = height_img_size, align = "left"
+          )
+        }
+      },
+      deleteFile = FALSE
+    )
+
+    # output transformed image with or without grad CAM for diabetic retinopathy and maculopathy
+    output$outputImage2 <- renderImage(
+      {
+        test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
+          ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
+
+        if (!test_render_img) {
+          list(
+            src = "www/BLANK.png", contentType = "image/png",
+            width = 1, height = 1, align = "right"
+          )
+        } else {
+          if (!is.null(list_out_prio_retino()$grad_cam_dr_transformed_target_image)) {
+            tmpfile <- list_out_prio_retino()$grad_cam_dr_transformed_target_image %>%
+              image_write(tempfile(fileext = "png"), format = "png")
             list(
-              src = image_write(list_out_prio_retino$out_orig_dr_img,
-                tempfile(fileext = "png"),
-                format = "png"
-              ),
-              contentType = "image/png",
-              width = 1200, height = 550
+              src = tmpfile, contentType = "image/png",
+              width = width_img_size, height = height_img_size, align = "right"
             )
-            # Return images for glaucoma
           } else {
+            tmpfile <- list_out_prio_retino()$transformed_target_image %>%
+              image_write(tempfile(fileext = "png"), format = "png")
             list(
-              src = image_write(list_out_prio_retino$out_orig_glauco_img,
-                tempfile(fileext = "png"),
-                format = "png"
-              ),
-              contentType = "image/png",
-              width = 1200, height = 550
+              src = tmpfile, contentType = "image/png",
+              width = width_img_size, height = height_img_size, align = "right"
             )
           }
         }
@@ -607,24 +613,37 @@ server <- shinyServer(
       deleteFile = FALSE
     )
 
-    output$output_dr_prio_retino_text <- renderText({
-      if (input$element_id == "Diabetic retinopathy and maculopathy" ||
-        input$element_id == "Rétinopathie et maculopathie diabétique" ||
-        input$element_id == "Retinopatia diabética e maculopatia") {
-        list_out_prio_retino()$out_dr_prio_retino_txt
-      } else {
-        ""
-      }
-    })
-    output$output_glauco_prio_retino_text <- renderText({
-      if (input$element_id == "Glaucoma" ||
-        input$element_id == "Glaucome" ||
-        input$element_id == "Glaucoma") {
-        list_out_prio_retino()$out_glauco_prio_retino_txt
-      } else {
-        ""
-      }
-    })
+    # output transformed image with or without grad CAM for glaucoma
+    output$outputImage3 <- renderImage(
+      {
+        test_render_img <- (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) &&
+          ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != ""))
+
+        if (!test_render_img) {
+          list(
+            src = "www/BLANK.png", contentType = "image/png",
+            width = 1, height = 1, align = "right"
+          )
+        } else {
+          if (!is.null(list_out_prio_retino()$grad_cam_glauco_transformed_target_image)) {
+            tmpfile <- list_out_prio_retino()$grad_cam_glauco_transformed_target_image %>%
+              image_write(tempfile(fileext = "png"), format = "png")
+            list(
+              src = tmpfile, contentType = "image/png",
+              width = width_img_size, height = height_img_size, align = "right"
+            )
+          } else {
+            tmpfile <- list_out_prio_retino()$transformed_target_image %>%
+              image_write(tempfile(fileext = "png"), format = "png")
+            list(
+              src = tmpfile, contentType = "image/png",
+              width = width_img_size, height = height_img_size, align = "right"
+            )
+          }
+        }
+      },
+      deleteFile = FALSE
+    )
   }
 )
 
