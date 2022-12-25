@@ -161,10 +161,40 @@
     			"Français": "Rétinopathie et maculopathie diabétique",
     			"Português": "Retinopatia diabética e maculopatia"
   		},
-    		{
-      			"English": "Glaucoma",
+  		{
+    			"English": "Glaucoma",
     			"Français": "Glaucome",
     			"Português": "Glaucoma"
-    		}
+      },
+      {		
+          "English": "Original fundus image",
+    			"Français": "Fond d'oeil Original",
+    			"Português": "Fundo de olho original"
+      },
+      {
+          "English": "Detected areas for maculopathy",
+    			"Français": "Zones détectées pour la maculopathie diabétique",
+    			"Português": "Áreas detectadas para maculopatia diabética"        
+      },
+      {
+          "English": "No detected areas for diabetic retinopathy and/or maculopathy",
+    			"Français": "Aucune zone détectée pour la rétinopathie et/ou maculopathie diabétique",
+    			"Português": "Nenhuma área detectada para retinopatia e/ou maculopatia diabética"        
+      },
+      {
+          "English": "Detected areas for diabetic retinopathy and/or maculopathy",
+    			"Français": "Zones détectées pour la rétinopathie et/ou maculopathie diabétique",
+    			"Português": "Áreas detectadas para retinopatia e/ou maculopatia diabética"        
+      },
+      {
+          "English": "No detected areas for glaucoma",
+    			"Français": "Aucune zone détectée pour le glaucome",
+    			"Português": "Nenhuma área detectada para glaucoma"        
+      },
+      {
+          "English": "Detected areas for glaucoma",
+    			"Français": "Zones détectées pour le glaucome",
+    			"Português": "Áreas detectadas para glaucoma"        
+      }
 	]
 }

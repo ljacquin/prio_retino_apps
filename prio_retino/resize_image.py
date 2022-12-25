@@ -26,6 +26,6 @@ def resize_image(name, desired_size=1024):
                                  tuple([int(width * ratio), int(height * ratio)]),
                                  interpolation=cv2.INTER_CUBIC)
 
-        cv2.imwrite(f'www/resized_cropped_target_image.jpg', new_img)
+        cv2.imwrite(f'www/resized_cropped_target_image.png', new_img)
     else:
-        cv2.imwrite(f'www/resized_cropped_target_image.jpg', img)
+        cv2.imwrite(f'www/resized_cropped_target_image.png', img)
