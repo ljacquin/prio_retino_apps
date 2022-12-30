@@ -13,11 +13,12 @@ library(caret)
 setwd(dirname(getActiveDocumentContext()$path))
 
 img_size <- 299
-img_path <- "../DR_DATA/CNN_BINARY_DATA_2/test_dir/"
-model <- load_model_hdf5("../DR_APPS/PRIO_RETINO_MODELS/xception_binary_classifier_2_full_arch_avg_pool_ratio_2_1_epochs_9.h5")
+img_path <- "../../../DR_DATA/CNN_BINARY_DATA_2/test_dir/"
+model <- load_model_hdf5("../../prio_retino_apps/prio_retino/xception_binary_classifier_2_full_arch_avg_pool_ratio_2_1_epochs_9.h5")
 
 Test_image_names <- list.files(img_path)
-Test_image_labels <- as.data.frame(fread("../DR_LABELS/Test_image_labels_binary_data_2.csv"))
+Test_image_labels <- as.data.frame(fread("../../../DR_LABELS/Test_image_labels_binary_data_2.csv"))
+print(identical(Test_image_names, Test_image_labels$image_id))
 
 Vect_true_class <- Test_image_labels$level
 Vect_pred_class <- rep("None", length(Test_image_names))
