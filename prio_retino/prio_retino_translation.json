@@ -82,9 +82,9 @@
 			"Português": "- Glaucoma referenciável: glaucoma verdadeiro, glaucoma pré-perimétrico ou suspeito de alto risco. Recomendações da AAO: Repetir o exame a cada 1-2 meses até a estabilização da doença"
 		},
 		{
-			"English": "- Non referable glaucoma: low-risk suspect or no visible sign of glaucoma. AAO recommendations: repeat examination annually",
-			"Français": "- Glaucome non référable: faible risque suspecté ou aucun signe visible de glaucome. Recommandations de l'AAO: répéter l'examen chaque année",
-			"Português": "- Glaucoma não referenciável: suspeita de baixo risco ou sem sinais visíveis de glaucoma. Recomendações da AAO: Repetir o exame todos os anos"
+			"English": "- Non referable glaucoma: no visible sign or low-risk suspect for glaucoma. AAO recommendations: repeat examination annually",
+			"Français": "- Glaucome non référable: aucun signe visible ou faible risque suspecté de glaucome. Recommandations de l'AAO: répéter l'examen chaque année",
+			"Português": "- Glaucoma não referenciável: sem sinais visíveis ou suspeita de baixo risco de glaucoma. Recomendações da AAO: Repetir o exame todos os anos"
 		},
 		{
 			"English": "- The analyzed data is deleted and not stored by Prio Retino after each reset",
@@ -142,9 +142,9 @@
     			"Português": "Reinicie o Prio Retino primeiro e, em seguida, siga estas instruções: 1. Selecione o seu idioma, 2. Insira o identificador do paciente e 3. Carregue uma imagem do fundo de olho."
   		},
   		{
-			"English": "Prio Retino results : low-risk suspect or no visible sign of glaucoma (i.e. non referable glaucoma) detected with a probability of ",
-		    	"Français": "Résultats de Prio Retino : faible risque suspecté ou aucun signe visible de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
-    			"Português": "Resultados Prio Retino : suspeita de baixo risco ou nenhum sinal visível de glaucoma (i.e. glaucoma não referenciável) detectado com probabilidade de "
+			"English": "Prio Retino results : no visible sign or low-risk suspect for glaucoma (i.e. non referable glaucoma) detected with a probability of ",
+		    	"Français": "Résultats de Prio Retino : aucun signe visible ou faible risque suspecté de glaucome (i.e. glaucome non référable) détecté avec une probabilité de ",
+    			"Português": "Resultados Prio Retino : sem sinais visíveis ou suspeita de baixo risco de glaucoma (i.e. glaucoma não referenciável) detectado com probabilidade de "
   		},
   		{
   	  		"English": "Prio Retino results : referable glaucoma (i.e. true glaucoma, pre-perimetric glaucoma or high-risk suspect) detected with a probability of ",
@@ -157,44 +157,44 @@
     			"Português": "Veja os resultados do pré-diagnóstico para:"
   		},
   		{
-  	  		"English": "Diabetic retinopathy and maculopathy",
-    			"Français": "Rétinopathie et maculopathie diabétique",
-    			"Português": "Retinopatia diabética e maculopatia"
+  	  		"English": "Diabetic retinopathy and/or maculopathy",
+    			"Français": "Rétinopathie et/ou maculopathie diabétique",
+    			"Português": "Retinopatia diabética e/ou maculopatia"
   		},
   		{
     			"English": "Glaucoma",
     			"Français": "Glaucome",
     			"Português": "Glaucoma"
-      },
-      {		
-          "English": "Original fundus image",
-    			"Français": "Fond d'oeil Original",
-    			"Português": "Fundo de olho original"
-      },
-      {
-          "English": "Detected areas for maculopathy",
-    			"Français": "Zones détectées pour la maculopathie diabétique",
-    			"Português": "Áreas detectadas para maculopatia diabética"        
-      },
-      {
-          "English": "No detected areas for diabetic retinopathy and/or maculopathy",
-    			"Français": "Aucune zone détectée pour la rétinopathie et/ou maculopathie diabétique",
-    			"Português": "Nenhuma área detectada para retinopatia e/ou maculopatia diabética"        
-      },
-      {
-          "English": "Detected areas for diabetic retinopathy and/or maculopathy",
-    			"Français": "Zones détectées pour la rétinopathie et/ou maculopathie diabétique",
-    			"Português": "Áreas detectadas para retinopatia e/ou maculopatia diabética"        
-      },
-      {
-          "English": "No detected areas for glaucoma",
-    			"Français": "Aucune zone détectée pour le glaucome",
-    			"Português": "Nenhuma área detectada para glaucoma"        
-      },
-      {
-          "English": "Detected areas for glaucoma",
-    			"Français": "Zones détectées pour le glaucome",
-    			"Português": "Áreas detectadas para glaucoma"        
-      }
+		},
+		{		
+			"English": "Original fundus image",
+			"Français": "Fond d'oeil Original",
+			"Português": "Fundo de olho original"
+		},
+		{
+			"English": "Detected areas for maculopathy",
+			"Français": "Zones détectées pour la maculopathie diabétique",
+			"Português": "Áreas detectadas para maculopatia diabética"        
+		},
+		{
+			"English": "No detected areas for diabetic retinopathy and/or maculopathy",
+			"Français": "Aucune zone détectée pour la rétinopathie \n et/ou maculopathie diabétique",
+			"Português": "Nenhuma área detectada para retinopatia e/ou maculopatia diabética"        
+		},
+		{
+			"English": "Detected areas for diabetic retinopathy and/or maculopathy",
+			"Français": "Zones détectées pour la rétinopathie et/ou maculopathie diabétique",
+			"Português": "Áreas detectadas para retinopatia e/ou maculopatia diabética"        
+		},
+		{
+			"English": "No detected areas for glaucoma",
+			"Français": "Aucune zone détectée pour le glaucome",
+			"Português": "Nenhuma área detectada para glaucoma"        
+		},
+		{
+			"English": "Detected areas for glaucoma",
+			"Français": "Zones détectées pour le glaucome",
+			"Português": "Áreas detectadas para glaucoma"        
+		}
 	]
 }

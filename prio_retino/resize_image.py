@@ -1,10 +1,6 @@
 import cv2
 
 
-# from keras import backend as K
-# import pandas as pd
-# import numpy as np
-
 def resize_image(name, desired_size=1024):
     img = cv2.imread(f"{name}")
 
