@@ -218,7 +218,7 @@ ui <- secure_app(
                         label = p(i18n$t("Display pre-diagnostic results for :"),
                                   style = "text-align:center;color:red;font-size:100%"
                         ),
-                        c("Diabetic retinopathy and/or maculopathy", "Glaucoma")
+                        c("Diabetic retinopathy and/or maculopathy", "Glaucoma (undergoing clinical validation)")
             ),
             verbatimTextOutput("res_auth"),
             width = 3
@@ -241,9 +241,9 @@ ui <- secure_app(
               h4(htmlOutput("output_dr_prio_retino_text"), align = "left")
             ),
             conditionalPanel(
-              'input.element_id=="Glaucoma"||
-               input.element_id=="Glaucome"||
-               input.element_id=="Glaucoma"',
+              'input.element_id=="Glaucoma (undergoing clinical validation)"||
+               input.element_id=="Glaucome (en cours de validation clinique)"||
+               input.element_id=="Glaucoma (em validação clínica)" ',
               h4(htmlOutput("output_glauco_prio_retino_text"), align = "left")
             ),
             withLoader(imageOutput("outputImage"),
@@ -349,7 +349,7 @@ server <- shinyServer(
     observe({
       updateSelectInput(session, "element_id",
                         label = i18n$t("Display pre-diagnostic results for :"),
-                        choices = i18n$t(c("Diabetic retinopathy and/or maculopathy", "Glaucoma"))
+                        choices = i18n$t(c("Diabetic retinopathy and/or maculopathy", "Glaucoma (undergoing clinical validation)"))
       )
     })
     
@@ -661,9 +661,9 @@ server <- shinyServer(
     output$output_glauco_prio_retino_text <- renderText({
       if (!(!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1)) {
         ""
-      } else if (input$element_id == "Glaucoma" ||
-                 input$element_id == "Glaucome" ||
-                 input$element_id == "Glaucoma") {
+      } else if (input$element_id == "Glaucoma (undergoing clinical validation)" ||
+                 input$element_id == "Glaucome (en cours de validation clinique)" ||
+                 input$element_id == "Glaucoma (em validação clínica)") {
         list_out_prio_retino()$out_glauco_prio_retino_txt
       }
     })

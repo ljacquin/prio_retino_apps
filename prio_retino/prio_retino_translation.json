@@ -195,6 +195,11 @@
 			"English": "Detected areas for glaucoma",
 			"Français": "Zones détectées pour le glaucome",
 			"Português": "Áreas detectadas para glaucoma"        
+		},
+		{
+		  "English": "Glaucoma (undergoing clinical validation)",
+			"Français": "Glaucome (en cours de validation clinique)",
+			"Português": "Glaucoma (em validação clínica)"       
 		}
 	]
 }
