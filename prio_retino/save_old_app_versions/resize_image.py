@@ -1,12 +1,27 @@
 import cv2
-import numpy as np
-import matplotlib.cm as cm
-import tensorflow as tf
-from tensorflow.keras.models import load_model, Model
-from tensorflow.keras.utils import load_img, img_to_array, array_to_img
 
 
-def resize_image(image, target_size=299):
-    arr_ = img_to_array(image)
-    img_ = array_to_img(cv2.resize(arr_, tuple([int(target_size), int(target_size)])))
-    return img_
+def resize_image(name, desired_size=1024):
+    img = cv2.imread(f"{name}")
+
+    img = cv2.copyMakeBorder(img, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ret, gray = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
+
+    image, contours, hierarchy = cv2.findContours(gray, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(contours)
+
+    if w > 200 and h > 200:
+        new_img = img[y:y + h, x:x + w]
+        height, width, _ = new_img.shape
+
+        if max([height, width]) > desired_size:
+            ratio = float(desired_size / max([height, width]))
+            new_img = cv2.resize(new_img,
+                                 tuple([int(width * ratio), int(height * ratio)]),
+                                 interpolation=cv2.INTER_CUBIC)
+
+        cv2.imwrite(f'www/resized_cropped_target_image.png', new_img)
+    else:
+        cv2.imwrite(f'www/resized_cropped_target_image.png', img)
