@@ -1,0 +1,26 @@
+Confusion Matrix and Statistics
+
+          Reference
+Prediction  rDR non_rDR
+   rDR     1149     192
+   non_rDR   57    3573
+                                          
+               Accuracy : 0.9499          
+                 95% CI : (0.9435, 0.9558)
+    No Information Rate : 0.7574          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.8687          
+                                          
+ Mcnemar's Test P-Value : < 2.2e-16       
+                                          
+            Sensitivity : 0.9527          
+            Specificity : 0.9490          
+         Pos Pred Value : 0.8568          
+         Neg Pred Value : 0.9843          
+             Prevalence : 0.2426          
+         Detection Rate : 0.2311          
+   Detection Prevalence : 0.2698          
+      Balanced Accuracy : 0.9509          
+                                          
+       'Positive' Class : rDR  

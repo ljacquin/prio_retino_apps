@@ -13,13 +13,16 @@ credentials <- data.frame(
 )
 
 ui <- secure_app(
+  tags_top = tags$img(src = "Gaiha_prio_retino_plus_login.png", width = 300),
   fluidPage(
     tags$head(tags$style(".progress-bar{background-color:#FF0000;}")),
-    titlePanel(title=div(img(src="Logo_GAIHA.PNG"), 
-                         h1("Prio Retino credential and usage application"))),
+    titlePanel(title=div(
+      titlePanel("", windowTitle = "Gaiha | Prio Retino+ Credential Usage"),
+      img(src="Gaiha_prio_retino_plus_login.png", width=400), 
+                         h1("Prio Retino+ credential and usage application"))),
     mainPanel(
           fileInput("file1",
-            h4(p("Update or upload Prio Retino credential and usage file",
+            h4(p("Update or upload Prio Retino+ credential and usage file",
               style = "color:#FF0000"
             )),
             accept = c(
@@ -29,10 +32,10 @@ ui <- secure_app(
             )
           ),
           tableOutput("create_credential_usage"),
-          downloadButton("three_dr_cred_usage", "Get Prio Retino credential and total usage file",
+          downloadButton("prio_retino_cred_usage", "Get Prio Retino+ credential and total usage file",
             style = "color: #fff; background-color:#FF7F50; border-color: #fff"
           ),
-          downloadButton("three_dr_usage", "Get Prio Retino total usage file only",
+          downloadButton("three_dr_usage", "Get Prio Retino+ total usage file only",
             style = "color: #fff; background-color:#27ae60; border-color: #fff"
           ),
           tags$hr()
@@ -50,19 +53,19 @@ server <- shinyServer(
       if (is.null(inFile)) {
         return(NULL)
       }
-      three_dr_cred_usage_df <- fread(inFile$datapath)
-      fwrite(three_dr_cred_usage_df, "prio_retino_credential_usage.csv")
+      prio_retino_cred_usage_df <- fread(inFile$datapath)
+      fwrite(prio_retino_cred_usage_df, "prio_retino_credential_usage.csv")
     })
 
     # Make an output for updated credential and usage file
-    output$three_dr_cred_usage <- downloadHandler(
+    output$prio_retino_cred_usage <- downloadHandler(
       filename = function() {
         paste0("prio_retino_credential_usage_at_", as.character(Sys.Date()), ".csv")
       },
       content = function(file) {
         if (file.exists("prio_retino_credential_usage.csv")) {
-          three_dr_cred_usage_df <- as.data.frame(fread("prio_retino_credential_usage.csv"))
-          write.csv(three_dr_cred_usage_df, file, row.names = FALSE)
+          prio_retino_cred_usage_df <- as.data.frame(fread("prio_retino_credential_usage.csv"))
+          write.csv(prio_retino_cred_usage_df, file, row.names = FALSE)
         } else {
           write.csv(data.frame(NULL), file, row.names = FALSE)
         }
@@ -76,12 +79,12 @@ server <- shinyServer(
       },
       content = function(file) {
         if (file.exists("prio_retino_credential_usage.csv")) {
-          three_dr_cred_usage_df <- as.data.frame(fread("prio_retino_credential_usage.csv"))
-          three_dr_cred_usage_df <- three_dr_cred_usage_df[, -match(
+          prio_retino_cred_usage_df <- as.data.frame(fread("prio_retino_credential_usage.csv"))
+          prio_retino_cred_usage_df <- prio_retino_cred_usage_df[, -match(
             "Password",
-            colnames(three_dr_cred_usage_df)
+            colnames(prio_retino_cred_usage_df)
           )]
-          write.csv(three_dr_cred_usage_df, file, row.names = FALSE)
+          write.csv(prio_retino_cred_usage_df, file, row.names = FALSE)
         } else {
           write.csv(data.frame(NULL), file, row.names = FALSE)
         }

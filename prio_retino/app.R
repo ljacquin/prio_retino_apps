@@ -111,15 +111,15 @@ if (!exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") && 
 ) {
   cnn_binary_classifier_1 <<- load_model("xception_binary_classifier_1_full_arch_avg_pool_ratio_10_1_epochs_11.h5")
   cnn_binary_classifier_2 <<- load_model("xception_binary_classifier_2_full_arch_avg_pool_ratio_2_1_epochs_9.h5")
-  cnn_binary_classifier_3 <<- load_model("xception_binary_classifier_3_full_arch_avg_pool.h5")
-  cnn_binary_classifier_4 <<- load_model("xception_binary_classifier_4_full_arch_avg_pool.h5")
+  cnn_binary_classifier_3 <<- load_model("xception_binary_classifier_3_full_arch_avg_pool_epochs_7.h5")
+  cnn_binary_classifier_4 <<- load_model("xception_binary_classifier_4_full_arch_avg_pool_epochs_7.h5")
   cnn_binary_classifier_5 <<- load_model("xception_binary_classifier_5_full_arch_avg_pool_augment_new_data_ratio_10_1_epochs_7.h5")
 }
 img_size_cnn <<- as.numeric(scan("img_size_cnn.txt"))
 
 # Raw image parameters
 desired_size <<- 1024
-img_size_qual <<- 150 
+img_size_qual <<- 150
 blur_factor <<- 100
 img_qual_tresh <<- 32
 
@@ -130,12 +130,9 @@ height_img_size <<- 450
 # grad-cam parameter
 last_conv_layer_name <<- "block14_sepconv2_act"
 
-# compute quality
-compute_quality <<- FALSE
-
 # convert output images to low quality to increase rendering speed
 convert_magick2cimg <<- TRUE
-annotation_color_ <<- "none"  #render in white
+annotation_color_ <<- "none" # render in white
 
 # Loading CSS content
 appCSS <- "
@@ -157,7 +154,7 @@ appCSS <- "
 ################################
 ui <- secure_app(
   choose_language = FALSE,
-  tags_top = tags$img(src = "Gaiha_prio_retino_login.png", width = 300),
+  tags_top = tags$img(src = "Gaiha_prio_retino_plus_login.png", width = 300),
   
   # ui <- fluidPage(
   fluidPage(
@@ -218,7 +215,10 @@ ui <- secure_app(
                         label = p(i18n$t("Display pre-diagnostic results for :"),
                                   style = "text-align:center;color:red;font-size:100%"
                         ),
-                        c("Diabetic retinopathy and/or maculopathy", "Glaucoma")
+                        c(
+                          "Diabetic retinopathy and/or maculopathy",
+                          "Glaucoma (undergoing clinical validation)"
+                        )
             ),
             verbatimTextOutput("res_auth"),
             width = 3
@@ -241,9 +241,9 @@ ui <- secure_app(
               h4(htmlOutput("output_dr_prio_retino_text"), align = "left")
             ),
             conditionalPanel(
-              'input.element_id=="Glaucoma"||
-               input.element_id=="Glaucome"||
-               input.element_id=="Glaucoma"',
+              'input.element_id=="Glaucoma (undergoing clinical validation)"||
+               input.element_id=="Glaucome (en cours de validation clinique)"||
+               input.element_id=="Glaucoma (em validação clínica)" ',
               h4(htmlOutput("output_glauco_prio_retino_text"), align = "left")
             ),
             withLoader(imageOutput("outputImage"),
@@ -349,7 +349,10 @@ server <- shinyServer(
     observe({
       updateSelectInput(session, "element_id",
                         label = i18n$t("Display pre-diagnostic results for :"),
-                        choices = i18n$t(c("Diabetic retinopathy and/or maculopathy", "Glaucoma"))
+                        choices = i18n$t(c(
+                          "Diabetic retinopathy and/or maculopathy",
+                          "Glaucoma (undergoing clinical validation)"
+                        ))
       )
     })
     
@@ -396,7 +399,7 @@ server <- shinyServer(
           fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
           
           # resize and crop original target image
-          out_resize_qual = compute_resize_quality_img(filename = rv$file1$datapath, img_size_qual=img_size_qual, desired_size=desired_size)
+          out_resize_qual <- compute_resize_quality_img(filename = rv$file1$datapath, img_size_qual = img_size_qual, desired_size = desired_size)
           list_out_prio_retino$resized_cropped_target_image <- image_read(out_resize_qual$temp_resize_img)
           file.remove(out_resize_qual$temp_resize_img)
           
@@ -408,10 +411,11 @@ server <- shinyServer(
           transformed_target_image <- transformed_target_image - Blur_target_img
           
           # save and resize transformed target image
-          tmpF_trans_img <- tempfile(fileext=".png")
+          tmpF_trans_img <- tempfile(fileext = ".png")
           save.image(
             transformed_target_image,
-            tmpF_trans_img, quality = 1
+            tmpF_trans_img,
+            quality = 1
           )
           list_out_prio_retino$transformed_target_image <- image_load(tmpF_trans_img)
           list_out_prio_retino$resized_transformed_target_image <- image_load(tmpF_trans_img,
@@ -510,7 +514,8 @@ server <- shinyServer(
           list_out_prio_retino$out_orig_dr_img <- image_append(c(out_orig_img, out_dr_img))
           if (convert_magick2cimg) {
             list_out_prio_retino$out_orig_dr_img <- magick2cimg(list_out_prio_retino$out_orig_dr_img,
-                                                                alpha = "flatten")
+                                                                alpha = "flatten"
+            )
           }
           
           # compute glauco status
@@ -552,10 +557,11 @@ server <- shinyServer(
           list_out_prio_retino$out_orig_glauco_img <- image_append(c(out_orig_img, out_glauco_img))
           if (convert_magick2cimg) {
             list_out_prio_retino$out_orig_glauco_img <- magick2cimg(list_out_prio_retino$out_orig_glauco_img,
-                                                                    alpha = "flatten")
+                                                                    alpha = "flatten"
+            )
           }
           
-          # test image quality and add warning 
+          # test image quality and add warning
           ifelse(as.numeric(out_resize_qual$img_qual_score) < img_qual_tresh, img_qual <- 1, img_qual <- 0)
           if (!img_qual) {
             dr_color <- "#EE9F27"
@@ -564,7 +570,7 @@ server <- shinyServer(
             out_dr_txt <- paste0(img_qual_warning, out_dr_txt)
             out_glauco_txt <- paste0(img_qual_warning, out_glauco_txt)
           }
-
+          
           out_dr_prio_retino_txt <- HTML(paste0("<div style='background-color:", dr_color, "'>", out_dr_txt, "</div>"))
           out_glauco_prio_retino_txt <- HTML(paste0("<div style='background-color:", glauco_color, "'>", out_glauco_txt, "</div>"))
         } else {
@@ -590,7 +596,7 @@ server <- shinyServer(
         if (!test_render_img) {
           # Default image
           list(
-            src = "www/AI_PRIO_RETINO.png", contentType = "image/png",
+            src = "www/AI_PRIO_RETINO_PLUS.png", contentType = "image/png",
             width = 1150, height = 650, align = "left"
           )
         } else {
@@ -599,10 +605,11 @@ server <- shinyServer(
               input$element_id == "Rétinopathie et/ou maculopathie diabétique" ||
               input$element_id == "Retinopatia diabética e/ou maculopatia") {
             if (convert_magick2cimg) {
-              tmpF_orig_dr_img <- tempfile(fileext=".png")
+              tmpF_orig_dr_img <- tempfile(fileext = ".png")
               save.image(
                 list_out_prio_retino$out_orig_dr_img,
-                tmpF_orig_dr_img, quality = 1
+                tmpF_orig_dr_img,
+                quality = 1
               )
               list(
                 src = tmpF_orig_dr_img,
@@ -622,10 +629,11 @@ server <- shinyServer(
             # Return images for glaucoma
           } else {
             if (convert_magick2cimg) {
-              tmpF_orig_glauco_img <- tempfile(fileext=".png")
+              tmpF_orig_glauco_img <- tempfile(fileext = ".png")
               save.image(
                 list_out_prio_retino$out_orig_glauco_img,
-                tmpF_orig_glauco_img, quality = 1
+                tmpF_orig_glauco_img,
+                quality = 1
               )
               list(
                 src = tmpF_orig_glauco_img,
@@ -661,13 +669,12 @@ server <- shinyServer(
     output$output_glauco_prio_retino_text <- renderText({
       if (!(!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1)) {
         ""
-      } else if (input$element_id == "Glaucoma" ||
-                 input$element_id == "Glaucome" ||
-                 input$element_id == "Glaucoma") {
+      } else if (input$element_id == "Glaucoma (undergoing clinical validation)" ||
+                 input$element_id == "Glaucome (en cours de validation clinique)" ||
+                 input$element_id == "Glaucoma (em validação clínica)") {
         list_out_prio_retino()$out_glauco_prio_retino_txt
       }
     })
-    
   }
 )
 
