@@ -12,3 +12,5 @@ dr/dr_models/xception_binary_classifier_3_full_arch_avg_pool_epochs_7.h5
 dr/dr_models/xception_binary_classifier_4_full_arch_avg_pool.h5
 dr/dr_models/xception_binary_classifier_4_full_arch_avg_pool_epochs_7.h5
 dr/dr_data_non_empty_with_ref_images/
+dr/dr_scripts/Compute_metrics_and_ROC_binary_classifier_3.R
+dr/dr_scripts/Compute_metrics_and_ROC_binary_classifier_4.R
