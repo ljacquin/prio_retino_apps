@@ -1,6 +1,6 @@
-# =========================================#
+# ========================================#
 # Load packages and set working directory #
-# =========================================#
+# ========================================#
 library(rstudioapi)
 library(ROCR)
 library(pROC)
@@ -13,19 +13,30 @@ library(caret)
 setwd(dirname(getActiveDocumentContext()$path))
 
 img_size <- 299
+img_qual_tresh <- 32
+
 img_path <- "../dr_data/cnn_binary_data_2/test_dir/"
 model <- load_model_hdf5("../dr_models/xception_binary_classifier_2_full_arch_avg_pool_ratio_2_1_epochs_9.h5")
 
-Test_image_names <- list.files(img_path)
-Test_image_labels <- as.data.frame(fread("../dr_labels/test_image_labels_binary_data_2.csv"))
-print(identical(Test_image_labels$image_id, Test_image_names))
-Vect_true_class <- Test_image_labels$level
-Vect_pred_class <- rep("None", length(Test_image_names))
-Vect_pos_class_prob <- rep(Inf, length(Test_image_names))
+img_qual_score_df <- as.data.frame(fread('../dr_data/image_size_150_brisque_score.csv')) 
+bad_qual_img <- c(readLines('../dr_results/moderate_rDR_test_data_bad_qual_img'), 
+                  readLines('../dr_results/severe_prolif_rDR_test_data_bad_qual_img'))
 
-for (i in 1:length(Test_image_names))
+Test_image_labels <- as.data.frame(fread("../dr_labels/test_image_labels_binary_data_2.csv"))
+Test_image_labels$qual_score <- img_qual_score_df$score[match(Test_image_labels$image_id, 
+                                                              img_qual_score_df$image)]
+
+# keep images with acceptable quality based on threshold and visual inspection
+Test_image_labels <- Test_image_labels[Test_image_labels$qual_score < img_qual_tresh, ]
+Test_image_labels <- Test_image_labels[-match(bad_qual_img,Test_image_labels$image_id), ]
+
+Vect_true_class <- Test_image_labels$level
+Vect_pred_class <- rep("None", nrow(Test_image_labels))
+Vect_pos_class_prob <- rep(Inf, nrow(Test_image_labels))
+
+for (i in 1:nrow(Test_image_labels))
 {
-  img <- image_load(paste0(img_path, Test_image_names[i]), target_size = c(img_size, img_size))
+  img <- image_load(paste0(img_path, Test_image_labels$image_id[i]), target_size = c(img_size, img_size))
   x <- image_to_array(img)
   x <- array_reshape(x, c(1, dim(x)))
   x <- x / 255
@@ -54,5 +65,11 @@ pROC_obj <- roc(
 sens.ci <- ci.se(pROC_obj)
 plot(sens.ci, type = "shape", col = "lightblue")
 
-# Vect_id_false_neg <- Test_image_labels$image_id[which((Vect_true_class == "severe_prolif_DR") & (Vect_pred_class == "moderate_DR"))]
-# writeLines(Vect_id_moderate, '../dr_results/false_negative_severe_prolif_DR')
+# vect_id_false_neg <- Test_image_labels$image_id[which((Vect_true_class == "severe_prolif_DR") & (Vect_pred_class == "moderate_DR"))]
+# vect_id_false_pos <- Test_image_labels$image_id[which((Vect_true_class == "moderate_DR") & (Vect_pred_class == "severe_prolif_DR"))]
+# 
+# file.copy(paste0("../dr_data/original_data/",vect_id_false_neg),
+#           overwrite = TRUE, "../dr_results/severe_prolif_rDR_pred_as_moderate_rDR_IE_FN/")
+# 
+# file.copy(paste0("../dr_data/original_data/",vect_id_false_pos),
+#           overwrite = TRUE, "../dr_results/moderate_rDR_pred_as_false_severe_prolif_rDR_IE_FP/")

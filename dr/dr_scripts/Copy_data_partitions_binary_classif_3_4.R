@@ -11,7 +11,7 @@ prop_train <- 0.95
 prop_valid <- 0.04
 prop_test <- 0.01
 # dir_names <- list.dirs(full.names = FALSE)[-1]
-dir_name = 'non_rDR' #  "maculopathy" "non_rDR" "rDR" 
+dir_name = 'rDR' #  "maculopathy" "non_rDR" "rDR" 
 wd = getwd()
 
 # Set wd and split indexes into training, validation and test sets
