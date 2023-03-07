@@ -111,8 +111,8 @@ if (!exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") && 
 ) {
   cnn_binary_classifier_1 <<- load_model("xception_binary_classifier_1_full_arch_avg_pool_ratio_10_1_epochs_11.h5")
   cnn_binary_classifier_2 <<- load_model("xception_binary_classifier_2_full_arch_avg_pool_ratio_2_1_epochs_9.h5")
-  cnn_binary_classifier_3 <<- load_model("xception_binary_classifier_3_full_arch_avg_pool_epochs_7.h5")
-  cnn_binary_classifier_4 <<- load_model("xception_binary_classifier_4_full_arch_avg_pool_epochs_7.h5")
+  cnn_binary_classifier_3 <<- load_model("xception_binary_classifier_3_full_arch_avg_pool_epochs_5.h5")
+  cnn_binary_classifier_4 <<- load_model("xception_binary_classifier_4_full_arch_avg_pool_epochs_5.h5")
   cnn_binary_classifier_5 <<- load_model("xception_binary_classifier_5_full_arch_avg_pool_augment_new_data_ratio_10_1_epochs_7.h5")
 }
 img_size_cnn <<- as.numeric(scan("img_size_cnn.txt"))
