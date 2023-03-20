@@ -1,5 +1,12 @@
-# data folder and history files
+# glauco data folder 
+glauco/glauco_data_full/
+glauco/glauco_data_empty/
+
+# dr data folder
 dr/dr_data_full/
+dr/dr_data_empty/
+
+# .Rhistory files
 .Rhistory
 dr/dr_scripts/.Rhistory
 prio_retino/.Rhistory
@@ -9,7 +16,11 @@ prio_retino/xception_binary_classifier_1_full_arch_avg_pool_ratio_10_1_epochs_11
 prio_retino/xception_binary_classifier_2_full_arch_avg_pool_ratio_2_1_epochs_9.h5
 prio_retino/xception_binary_classifier_3_full_arch_avg_pool_epochs_5.h5
 prio_retino/xception_binary_classifier_4_full_arch_avg_pool_epochs_5.h5
-prio_retino/xception_binary_classifier_5_full_arch_avg_pool_augment_new_data_ratio_10_1_epochs_7.h5
+prio_retino/xception_binary_classifier_5_full_arch_avg_pool_ratio_10_1_epochs_7.h5
+
+# glauco_model folder
+glauco/glauco_model/xception_binary_classifier_5_full_arch_avg_pool.h5
+glauco/glauco_model/xception_binary_classifier_5_full_arch_avg_pool_ratio_10_1_epochs_7.h5
 
 # dr_models folder
 dr/dr_models/xception_binary_classifier_1_full_arch_avg_pool_ratio_10_1_epochs_11.h5 
