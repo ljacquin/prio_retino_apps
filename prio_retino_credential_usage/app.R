@@ -8,7 +8,7 @@ credentials <- data.frame(
     "glevezouet@gaiha.org",
     "adrif@gaiha.org"
   ),
-  password = c("F3P8gf", "Tb6sJe", "esRY18"),
+  password = c("******", "******", "******"),
   stringsAsFactors = FALSE
 )
 

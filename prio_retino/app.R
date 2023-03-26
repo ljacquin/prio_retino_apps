@@ -61,7 +61,7 @@ source_python("img_resize_quality_functions.py")
 source_python("grad_cam_functions.py")
 
 
-# Set countries languages
+# set countries languages
 countries <- c(
   "English", "Français",
   "Português"
@@ -71,13 +71,16 @@ flags <- c(
   "portugal.png"
 )
 
-# File with translations
+# full access list for all functionalities
+full_access_list <- readLines("full_access_list")
+
+# file with translations
 i18n <- Translator$new(translation_json_path = "prio_retino_translation.json")
 i18n$set_translation_language("English")
 
 
 #####################
-#### Credentials ####
+#### credentials ####
 #####################
 tryCatch(
   {
@@ -115,7 +118,7 @@ if (!exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") && 
   cnn_binary_classifier_4 <<- load_model("xception_binary_classifier_4_full_arch_avg_pool_epochs_5.h5")
   cnn_binary_classifier_5 <<- load_model("xception_binary_classifier_5_full_arch_avg_pool_ratio_10_1_epochs_7.h5")
 }
-img_size_cnn <<- as.numeric(scan("img_size_cnn.txt"))
+img_size_cnn <<- 299
 
 # Raw image parameters
 desired_size <<- 1024
@@ -211,15 +214,7 @@ ui <- secure_app(
               label = i18n$t("Upload fundus image"),
               accept = c(".png", ".jpeg", ".jpg")
             ),
-            selectInput("element_id",
-                        label = p(i18n$t("Display pre-diagnostic results for :"),
-                                  style = "text-align:center;color:red;font-size:100%"
-                        ),
-                        c(
-                          "Diabetic retinopathy and/or maculopathy",
-                          "Glaucoma (undergoing clinical validation)"
-                        )
-            ),
+            uiOutput("UIselectInput"),
             verbatimTextOutput("res_auth"),
             width = 3
           ),
@@ -346,14 +341,24 @@ server <- shinyServer(
     })
     
     # translate analyzed diseases
-    observe({
-      updateSelectInput(session, "element_id",
-                        label = i18n$t("Display pre-diagnostic results for :"),
-                        choices = i18n$t(c(
-                          "Diabetic retinopathy and/or maculopathy",
-                          "Glaucoma (undergoing clinical validation)"
-                        ))
-      )
+    output$UIselectInput <- renderUI({
+      auth_ind <- as.character(reactiveValuesToList(result_auth))
+      if (auth_ind %in% full_access_list) {
+        selectInput("element_id",
+                    label = i18n$t("Display pre-diagnostic results for :"),
+                    choices = i18n$t(c(
+                      "Diabetic retinopathy and/or maculopathy",
+                      "Glaucoma (undergoing clinical validation)"
+                    ))
+        )
+      } else {
+        selectInput("element_id",
+                    label = i18n$t("Display pre-diagnostic results for :"),
+                    choices = i18n$t(
+                      "Diabetic retinopathy and/or maculopathy"
+                    )
+        )
+      }
     })
     
     # print results
