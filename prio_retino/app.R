@@ -60,6 +60,9 @@ options(encoding = "UTF-8")
 source_python("img_resize_quality_functions.py")
 source_python("grad_cam_functions.py")
 
+###################################
+#### user interface parameters ####
+###################################
 
 # set countries languages
 countries <- c(
@@ -70,9 +73,6 @@ flags <- c(
   "us.png", "french.png",
   "portugal.png"
 )
-
-# full access list for all functionalities
-full_access_list <- readLines("full_access_list")
 
 # file with translations
 i18n <- Translator$new(translation_json_path = "prio_retino_translation.json")
@@ -96,7 +96,6 @@ tryCatch(
   }
 )
 
-
 # data.frame with credentials info
 credentials <- data.frame(
   user = prio_retino_credentials$Login,
@@ -104,11 +103,15 @@ credentials <- data.frame(
   stringsAsFactors = FALSE
 )
 
-#########################################
-### Prio Retino+ models and parameters ###
-#########################################
+# full access list for all functionalities
+full_access_list <- readLines("full_access_list")
 
-# CNN model and parameters
+
+##########################################
+### prio retino+ models and parameters ###
+##########################################
+
+# cnn model and parameters
 if (!exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") && !exists("cnn_binary_classifier_3") &&
     !exists("cnn_binary_classifier_4") && !exists("cnn_binary_classifier_5")
 ) {
@@ -120,13 +123,13 @@ if (!exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") && 
 }
 img_size_cnn <<- 299
 
-# Raw image parameters
+# raw image parameters
 desired_size <<- 1024
 img_size_qual <<- 150
 blur_factor <<- 100
 img_qual_tresh <<- 32
 
-# Output image parameters
+# output image parameters
 width_img_size <<- 540
 height_img_size <<- 450
 
@@ -137,7 +140,7 @@ last_conv_layer_name <<- "block14_sepconv2_act"
 convert_magick2cimg <<- TRUE
 annotation_color_ <<- "none" # render in white
 
-# Loading CSS content
+# loading css content
 appCSS <- "
 #loading-content {
   position: absolute;
@@ -152,9 +155,9 @@ appCSS <- "
 }
 "
 
-################################
-### User interface component ###
-################################
+#################################
+### user interface components ###
+#################################
 ui <- secure_app(
   choose_language = FALSE,
   tags_top = tags$img(src = "Gaiha_prio_retino_plus_login.png", width = 300),
@@ -165,13 +168,13 @@ ui <- secure_app(
     useShinyjs(),
     inlineCSS(appCSS),
     
-    # Loading message
+    # loading message
     div(
       id = "loading-content",
       h2(i18n$t("Loading Prio Retino+..."))
     ),
     
-    # Language selection
+    # language selection
     shiny.i18n::usei18n(i18n),
     div(
       style = "float: right;", class = "chooselang",
@@ -192,7 +195,7 @@ ui <- secure_app(
       )
     ),
     
-    # The main app code goes here
+    # main app code goes here
     hidden(
       div(
         id = "app-content",
@@ -282,7 +285,7 @@ ui <- secure_app(
 
 
 ########################
-### Server component ###
+### server component ###
 ########################
 server <- shinyServer(
   function(input, output, session) {
@@ -335,7 +338,7 @@ server <- shinyServer(
       non_analysis_state <- (list_out_prio_retino()$out_dr_prio_retino_txt == "")
       if (non_analysis_state
       ) {
-        # Here is where we update language in session
+        # here is where we update language in session
         shiny.i18n::update_lang(session, input$selected_language)
       }
     })
@@ -381,7 +384,7 @@ server <- shinyServer(
       
       if (!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1) {
         if ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != "")) {
-          # Update login usage
+          # update login usage
           auth_ind <- as.character(reactiveValuesToList(result_auth))
           tryCatch(
             {
@@ -599,13 +602,13 @@ server <- shinyServer(
         list_out_prio_retino <- list_out_prio_retino()
         
         if (!test_render_img) {
-          # Default image
+          # default image
           list(
             src = "www/AI_PRIO_RETINO_PLUS.png", contentType = "image/png",
             width = 1150, height = 650, align = "left"
           )
         } else {
-          # Return images for DR and/or maculopathy
+          # return images for DR and/or maculopathy
           if (input$element_id == "Diabetic retinopathy and/or maculopathy" ||
               input$element_id == "Rétinopathie et/ou maculopathie diabétique" ||
               input$element_id == "Retinopatia diabética e/ou maculopatia") {
@@ -631,7 +634,7 @@ server <- shinyServer(
                 width = 1200, height = 550
               )
             }
-            # Return images for glaucoma
+            # return images for glaucoma
           } else {
             if (convert_magick2cimg) {
               tmpF_orig_glauco_img <- tempfile(fileext = ".png")
