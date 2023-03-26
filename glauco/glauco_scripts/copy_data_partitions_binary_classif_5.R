@@ -5,7 +5,7 @@ library(rstudioapi)
 library(data.table)
 library(stringr)
 setwd(dirname(getActiveDocumentContext()$path))
-source('Create_partitions_train_valid_test.R')
+source('create_partitions_train_valid_test.R')
 set.seed(123)
 
 #==========================================#
@@ -23,7 +23,7 @@ floor(nrow(img_lab_df)*Prop_valid)
 nrow(img_lab_df) - (floor(nrow(img_lab_df)*Prop_train) + floor(nrow(img_lab_df)*Prop_valid))
 
 ## Create a list of partitions for each disease type
-List_partitions<-Create_partitions_train_valid_test( Prop_train = Prop_train, Prop_valid = Prop_valid, Vect_classes = img_lab_df$class )
+List_partitions<-create_partitions_train_valid_test( Prop_train = Prop_train, Prop_valid = Prop_valid, Vect_classes = img_lab_df$class )
 
 setwd('../glauco_data/processed_data/')
 # length(list.files())

@@ -5,7 +5,6 @@ library(rstudioapi)
 library(data.table)
 library(stringr)
 setwd(dirname(getActiveDocumentContext()$path))
-source('Create_partitions_train_valid_test.R')
 set.seed(123)
 
 #==========================================#

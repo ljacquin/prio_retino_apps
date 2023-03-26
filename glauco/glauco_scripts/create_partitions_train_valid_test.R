@@ -1,4 +1,4 @@
-Create_partitions_train_valid_test<-function(Prop_train=NULL, Prop_valid=NULL, Vect_classes=NULL)
+create_partitions_train_valid_test<-function(Prop_train=NULL, Prop_valid=NULL, Vect_classes=NULL)
 {
   Table_of_classes<-table(Vect_classes)
   nb_class<-length(unique(Vect_classes))
