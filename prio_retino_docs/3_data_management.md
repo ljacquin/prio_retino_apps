@@ -2,11 +2,11 @@
 
 # Data management
 
-## Lipsum
+## Data collection
 
-### Sorem
+### Diabetic retinopathy and maculopathy
 
-* Obla di
-* Obla da
+The fundus images collected for diabetic retinopathy and maculopathy 
+
 
 
