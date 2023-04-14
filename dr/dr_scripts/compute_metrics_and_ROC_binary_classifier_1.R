@@ -13,17 +13,10 @@ library(caret)
 setwd(dirname(getActiveDocumentContext()$path))
 
 img_size <- 299
-img_qual_tresh <- 32
-
 img_path <- "../dr_data/cnn_binary_data_1/test_dir/"
 model <- load_model_hdf5("../dr_models/xception_binary_classifier_1_full_arch_avg_pool_ratio_10_1_epochs_11.h5")
 
-img_qual_score_df <- as.data.frame(fread('../dr_data/image_size_150_brisque_score.csv')) 
-
 Test_image_labels <- as.data.frame(fread("../dr_labels/test_image_labels_binary_data_1.csv"))
-Test_image_labels$qual_score <- img_qual_score_df$score[match(Test_image_labels$image_id, 
-                                                              img_qual_score_df$image)]
-Test_image_labels <- Test_image_labels[Test_image_labels$qual_score < img_qual_tresh, ]
 
 Vect_true_class <- Test_image_labels$level
 Vect_pred_class <- rep("None", nrow(Test_image_labels))
@@ -56,10 +49,4 @@ pROC_obj <- roc( response=as.factor(df_class_pred_prob$True_class), predictor=df
 )
 sens.ci <- ci.se(pROC_obj)
 plot(sens.ci, type="shape", col="lightblue")
-
-# Vect_id_non_rDR<-Test_image_labels$image_id[ which( (Vect_true_class=='non_rDR')&(Vect_pred_class=='non_rDR') ) ]
-# writeLines(sample(Vect_id_non_rDR,size=500,replace=FALSE), '../dr_results/true_negative_non_rDR')
-
-# Vect_id_rDR_false_pred<-Test_image_labels$image_id[ which( (Vect_true_class=='rDR')&(Vect_pred_class=='non_rDR') ) ]
-# writeLines(Vect_id_rDR_false_pred, '../dr_results/false_negative_rDR')
 

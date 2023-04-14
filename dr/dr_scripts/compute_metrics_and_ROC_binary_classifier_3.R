@@ -58,5 +58,3 @@ pROC_obj <- roc(
 sens.ci <- ci.se(pROC_obj)
 plot(sens.ci, type = "shape", col = "lightblue")
 
-# Vect_id_false_neg <- Test_image_labels$image_id[which((Vect_true_class == "maculo") & (Vect_pred_class == "non_rDR"))]
-# writeLines(Vect_id_moderate, '../dr_results/false_negative_severe_prolif_DR')

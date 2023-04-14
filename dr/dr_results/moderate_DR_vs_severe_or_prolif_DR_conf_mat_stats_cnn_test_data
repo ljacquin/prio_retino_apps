@@ -2,25 +2,25 @@ Confusion Matrix and Statistics
 
                   Reference
 Prediction         severe_prolif_DR moderate_DR
-  severe_prolif_DR              220          78
-  moderate_DR                    92         525
+  severe_prolif_DR             1059         438
+  moderate_DR                   193        1618
                                           
-               Accuracy : 0.8142          
-                 95% CI : (0.7875, 0.8389)
-    No Information Rate : 0.659           
-    P-Value [Acc > NIR] : <2e-16          
+               Accuracy : 0.8093          
+                 95% CI : (0.7954, 0.8225)
+    No Information Rate : 0.6215          
+    P-Value [Acc > NIR] : < 2.2e-16       
                                           
-                  Kappa : 0.5821          
+                  Kappa : 0.6095          
                                           
- Mcnemar's Test P-Value : 0.3187          
+ Mcnemar's Test P-Value : < 2.2e-16       
                                           
-            Sensitivity : 0.7051          
-            Specificity : 0.8706          
-         Pos Pred Value : 0.7383          
-         Neg Pred Value : 0.8509          
-             Prevalence : 0.3410          
-         Detection Rate : 0.2404          
-   Detection Prevalence : 0.3257          
-      Balanced Accuracy : 0.7879          
+            Sensitivity : 0.8458          
+            Specificity : 0.7870          
+         Pos Pred Value : 0.7074          
+         Neg Pred Value : 0.8934          
+             Prevalence : 0.3785          
+         Detection Rate : 0.3201          
+   Detection Prevalence : 0.4525          
+      Balanced Accuracy : 0.8164          
                                           
        'Positive' Class : severe_prolif_DR
