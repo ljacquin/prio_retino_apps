@@ -1,0 +1,26 @@
+Confusion Matrix and Statistics
+
+          Reference
+Prediction fundus others
+    fundus   2000      0
+    others      0   2000
+                                     
+               Accuracy : 1          
+                 95% CI : (0.9991, 1)
+    No Information Rate : 0.5        
+    P-Value [Acc > NIR] : < 2.2e-16  
+                                     
+                  Kappa : 1          
+                                     
+ Mcnemar's Test P-Value : NA         
+                                     
+            Sensitivity : 1.0        
+            Specificity : 1.0        
+         Pos Pred Value : 1.0        
+         Neg Pred Value : 1.0        
+             Prevalence : 0.5        
+         Detection Rate : 0.5        
+   Detection Prevalence : 0.5        
+      Balanced Accuracy : 1.0        
+                                     
+       'Positive' Class : fundus     
