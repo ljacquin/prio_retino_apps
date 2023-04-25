@@ -136,6 +136,11 @@
     			"Français": "Définir la langue de Prio Retino+",
     			"Português": "Definir idioma Prio Retino+"
   		},
+  		{
+			"English": "Is the uploaded file a fundus image ? ",
+    			"Français": "Le fichier téléchargé est-il une image de fond d'oeil ? ",
+    			"Português": "O ficheiro carregado é uma imagem de fundo ? "
+  		},
 	  	{
 			"English": "Please reset Prio Retino+ first, then follow these instructions: 1. Select your language, 2. Insert patient identifier and 3. Upload a fundus image.",
     			"Français": "Veuillez d'abord réinitialiser Prio Retino+, puis suivez ces instructions: 1. Sélectionnez votre langue, 2. Insérez l'identifiant du patient et 3. Chargez une image du fond d'oeil.",
@@ -197,7 +202,7 @@
 			"Português": "Áreas detectadas para glaucoma"        
 		},
 		{
-		  "English": "Glaucoma (undergoing clinical validation)",
+		  	"English": "Glaucoma (undergoing clinical validation)",
 			"Français": "Glaucome (en cours de validation clinique)",
 			"Português": "Glaucoma (em validação clínica)"       
 		}
