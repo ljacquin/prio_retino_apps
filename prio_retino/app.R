@@ -54,15 +54,19 @@ library(shinymanager)
 library(shinycustomloader)
 library(shiny.i18n)
 library(shinyWidgets)
+library(RSQLite)
 # library(rstudioapi)
 # setwd(dirname(getActiveDocumentContext()$path))
 options(encoding = "UTF-8")
 source_python("img_resize_quality_functions.py")
 source_python("grad_cam_functions.py")
+# source custom function for concurrent writing in SQLite database
+source('dbWriteTable_.R')
 
-###################################
-#### user interface parameters ####
-###################################
+# set dbname
+dbname_ = "../../prio_suite_db"
+
+# user interface parameters
 
 # set countries languages
 countries <- c(
@@ -78,38 +82,27 @@ flags <- c(
 i18n <- Translator$new(translation_json_path = "prio_retino_translation.json")
 i18n$set_translation_language("English")
 
+# create a connection to prio suite db and disconnect on exit
+db_connect <- dbConnect(SQLite(), dbname = dbname_)
+on.exit(DBI::dbDisconnect(db_connect))
 
-#####################
-#### credentials ####
-#####################
-tryCatch(
-  {
-    prio_retino_credentials <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage.csv",
-      header = TRUE
-    ))
-    fwrite(prio_retino_credentials, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
-  },
-  error = function(err) {
-    prio_retino_credentials <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage_save.csv",
-      header = TRUE
-    ))
-  }
-)
+# credentials
+prio_retino_cred_use_df <- as.data.frame(dbReadTable(
+  db_connect,
+  "prio_retino_credential_current_month_usage"
+))
 
 # data.frame with credentials info
 credentials <- data.frame(
-  user = prio_retino_credentials$Login,
-  password = prio_retino_credentials$Password,
+  user = prio_retino_cred_use_df$Login,
+  password = prio_retino_cred_use_df$Password,
   stringsAsFactors = FALSE
 )
 
 # full access list for all functionalities
 full_access_list <- readLines("full_access_list")
 
-
-##########################################
-### prio retino+ models and parameters ###
-##########################################
+# prio retino+ models and parameters 
 
 # cnn model and parameters
 if (!exists("cnn_binary_classifier_0") && !exists("cnn_binary_classifier_1") && !exists("cnn_binary_classifier_2") &&
@@ -155,9 +148,7 @@ appCSS <- "
 }
 "
 
-#################################
-### user interface components ###
-#################################
+# user interface components
 ui <- secure_app(
   choose_language = FALSE,
   tags_top = tags$img(src = "Gaiha_prio_retino_plus_login.png", width = 300),
@@ -196,7 +187,6 @@ ui <- secure_app(
     ),
 
     # main app code goes here
-    hidden(
       div(
         id = "app-content",
         titlePanel("", windowTitle = "Gaiha | Prio Retino+"),
@@ -239,9 +229,9 @@ ui <- secure_app(
               h4(htmlOutput("output_dr_prio_retino_text"), align = "left")
             ),
             conditionalPanel(
-              'input.element_id=="Glaucoma (undergoing clinical validation)"||
-               input.element_id=="Glaucome (en cours de validation clinique)"||
-               input.element_id=="Glaucoma (em validação clínica)" ',
+              'input.element_id=="Glaucoma"||
+               input.element_id=="Glaucome"||
+               input.element_id=="Glaucoma" ',
               h4(htmlOutput("output_glauco_prio_retino_text"), align = "left")
             ),
             withLoader(imageOutput("outputImage"),
@@ -279,14 +269,10 @@ ui <- secure_app(
           "</font></u> <img src='kerIA_logo_black.svg' width='25'/></a></center>"
         )))
       )
-    )
   )
 )
 
-
-########################
-### server component ###
-########################
+# server component 
 server <- shinyServer(
   function(input, output, session) {
     options(shiny.maxRequestSize = 4 * 1024^2)
@@ -299,7 +285,6 @@ server <- shinyServer(
 
     # hide the loading message when the reset of the server function has executed
     hide(id = "loading-content", anim = TRUE, animType = "fade", time = 4)
-    show("app-content")
 
     # create reactive values for input file and patient id
     rv <- reactiveValues(
@@ -351,7 +336,7 @@ server <- shinyServer(
           label = i18n$t("Display pre-diagnostic results for :"),
           choices = i18n$t(c(
             "Diabetic retinopathy and/or maculopathy",
-            "Glaucoma (undergoing clinical validation)"
+            "Glaucoma"
           ))
         )
       } else {
@@ -394,28 +379,24 @@ server <- shinyServer(
         list_out_prio_retino$pred_other_img_status <- pred_other_img_status
 
         if ((!is.null(unlist(rv$patient_id))) && (unlist(rv$patient_id) != "") && (!pred_other_img_status)) {
+          
+          # create a connection to prio suite db and disconnect on exit
+          db_connect <- dbConnect(SQLite(), dbname = dbname_)
+          on.exit(DBI::dbDisconnect(db_connect))
+          
           # update login usage
           auth_ind <- as.character(reactiveValuesToList(result_auth))
-          tryCatch(
-            {
-              prio_retino_cred_use_df <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage.csv",
-                header = TRUE
-              ))
-              fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
-            },
-            error = function(err) {
-              prio_retino_cred_use_df <<- as.data.frame(fread("../prio_retino_credential_usage/prio_retino_credential_usage_save.csv",
-                header = TRUE
-              ))
-            }
-          )
+          prio_retino_cred_use_df <- as.data.frame(dbReadTable(
+            db_connect,
+            "prio_retino_credential_current_month_usage"
+          ))
           current_count <- prio_retino_cred_use_df[match(auth_ind, prio_retino_cred_use_df$Login), ]$Count
           prio_retino_cred_use_df[match(auth_ind, prio_retino_cred_use_df$Login), ]$Count <- current_count + 1
           prio_retino_cred_use_df[match(auth_ind, prio_retino_cred_use_df$Login), ]$Last_analysis_timestamp <- paste0(as.character(Sys.time()), "sec")
-
-          fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage.csv")
-          fwrite(prio_retino_cred_use_df, file = "../prio_retino_credential_usage/prio_retino_credential_usage_save.csv")
-
+          dbWriteTable_(db_connect, "prio_retino_credential_current_month_usage",
+                        prio_retino_cred_use_df,
+                        overwrite_ = TRUE
+          )
           # resize and crop original target image
           out_resize_qual <- compute_resize_quality_img(filename = rv$file1$datapath, img_size_qual = img_size_qual, desired_size = desired_size)
           list_out_prio_retino$resized_cropped_target_image <- image_read(out_resize_qual$temp_resize_img)
@@ -667,9 +648,9 @@ server <- shinyServer(
     output$output_glauco_prio_retino_text <- renderText({
       if (!(!is.null(unlist(rv$file1)) && as.numeric(rv$file1$size) > 1)) {
         ""
-      } else if (input$element_id == "Glaucoma (undergoing clinical validation)" ||
-        input$element_id == "Glaucome (en cours de validation clinique)" ||
-        input$element_id == "Glaucoma (em validação clínica)") {
+      } else if (input$element_id == "Glaucoma" ||
+        input$element_id == "Glaucome" ||
+        input$element_id == "Glaucoma") {
         list_out_prio_retino()$out_glauco_prio_retino_txt
       }
     })
