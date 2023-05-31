@@ -6,7 +6,7 @@
 
 The service setup is based on Ubuntu 22.04.1 LTS and can possibly work for much newer versions, even though this is not guaranteed. 
 
-The Gaiha Prio Retino app.R script runs using Python~=3.10, R~=4.2.1 (or possibly much newer version), Tensorflow~=2.11 and other dependencies.
+The Gaiha Prio Retino+ app.R script runs using Python~=3.10, R~=4.2.1 (or possibly much newer version), Tensorflow~=2.11 and other dependencies.
 
 ### 1. Installing Python and R
 
@@ -27,7 +27,7 @@ Shiny server can be downloaded and installed using the following commands:
 
 * sudo gdebi shiny-server-1.5.19.995-amd64.deb
 
-### 3. Installing Gaiha Prio Retino app dependencies (i.e. Tensorflow, Keras, OpenCV, etc.) :
+### 3. Installing Gaiha Prio Retino+ app dependencies (i.e. Tensorflow, Keras, OpenCV, etc.) :
 
 In the shell, type the following command for user shiny:
 
@@ -40,9 +40,9 @@ Then type the following command to install app.R dependencies:
 Note, if some packages cannot be installed due do some missing dependencies then install these before launching the above command again. One can also open the R console and install the packages in the r_requirements.R file by copy-pasting its content.
 
 
-### 4. Run Gaiha Prio Retino app locally:
+### 4. Run Gaiha Prio Retino+ app locally:
 
-The Gaiha Prio Retino app can be launched locally, from the prio_retino folder, using the following command in the R console :
+The Gaiha Prio Retino+ app can be launched locally, from the prio_retino folder, using the following command in the R console :
 
 * runApp()
 
